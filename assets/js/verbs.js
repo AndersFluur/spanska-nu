@@ -9,25 +9,63 @@ function normalize(str) {
 }
 
 function speakText(text) {
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=${encodeURIComponent(text)}`;
-    const audio = new Audio(audioUrl);
-
     return new Promise((resolve, reject) => {
-        audio.onended = () => resolve();
-        audio.onerror = () => {
-            console.log('Audio playback failed, trying fallback');
-            if ('speechSynthesis' in window) {
+        // Try browser's built-in speech synthesis first (most reliable)
+        if ('speechSynthesis' in window) {
+            try {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'es-ES';
-                utterance.rate = 0.8;
-                utterance.onend = () => resolve();
-                window.speechSynthesis.speak(utterance);
-            } else {
-                resolve();
+                utterance.rate = 0.85;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+
+                utterance.onend = () => {
+                    console.log('Speech finished successfully');
+                    resolve();
+                };
+
+                utterance.onerror = (event) => {
+                    console.error('Speech error:', event);
+                    // Try Google TTS as fallback
+                    tryGoogleTTS(text, resolve, reject);
+                };
+
+                // Small delay to ensure it works
+                setTimeout(() => {
+                    window.speechSynthesis.speak(utterance);
+                }, 50);
+            } catch (error) {
+                console.error('speechSynthesis error:', error);
+                tryGoogleTTS(text, resolve, reject);
             }
-        };
-        audio.play().catch(reject);
+        } else {
+            // No speech synthesis support, try Google TTS
+            tryGoogleTTS(text, resolve, reject);
+        }
+    });
+}
+
+function tryGoogleTTS(text, resolve, reject) {
+    console.log('Trying Google TTS fallback');
+    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=${encodeURIComponent(text)}`;
+    const audio = new Audio(audioUrl);
+
+    audio.onended = () => {
+        console.log('Google TTS finished');
+        resolve();
+    };
+
+    audio.onerror = (error) => {
+        console.error('Google TTS failed:', error);
+        alert('Ljuduppspelning fungerar inte. Kontrollera att ljud är aktiverat i webbläsaren.');
+        resolve();
+    };
+
+    audio.play().catch((error) => {
+        console.error('Audio play failed:', error);
+        alert('Kan inte spela ljud. Klicka någonstans på sidan först (webbläsarens autoplay-policy).');
+        resolve();
     });
 }
 
