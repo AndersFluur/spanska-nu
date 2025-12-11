@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oregelbundna Verb - Spanska Nu</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Tillbaka till startsidan</a>
+
+        <h1>🇪🇸 Oregelbundna Verb 🇸🇪</h1>
+        <p class="subtitle">Öva spanska oregelbundna verbböjningar och översättningar</p>
+
+        <div class="progress">
+            <div>Framsteg: <span id="correct-count">0</span> av <span id="total-count">0</span> korrekta</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="reset-btn" onclick="resetAll()">🔄 Rensa allt</button>
+            <button class="check-all-btn" onclick="checkAll()">✓ Kontrollera alla</button>
+            <button class="check-all-btn" onclick="fillAll()" style="background: #9b59b6;">📝 Fyll i alla svar</button>
+        </div>
+
+        <div id="verbs-container"></div>
+    </div>
+
+    <script src="assets/js/verbs.js"></script>
+    <script>
+        const verbData = {
+            "Oregelbundna verb": {
+                "SER (vara)": [
+                    { person: "yo", spanish: "soy", swedish: "jag" },
+                    { person: "tú", spanish: "eres", swedish: "du" },
+                    { person: "él/ella/usted", spanish: "es", swedish: "han/hon/ni" },
+                    { person: "nosotros/nosotras", spanish: "somos", swedish: "vi" },
+                    { person: "vosotros/vosotras", spanish: "sois", swedish: "ni" },
+                    { person: "ellos/ellas/ustedes", spanish: "son", swedish: "de/ni" }
+                ],
+                "ESTAR (vara, befinna sig)": [
+                    { person: "yo", spanish: "estoy" },
+                    { person: "tú", spanish: "estás" },
+                    { person: "él/ella/usted", spanish: "está" },
+                    { person: "nosotros/nosotras", spanish: "estamos" },
+                    { person: "vosotros/vosotras", spanish: "estáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "están" }
+                ],
+                "TENER (ha)": [
+                    { person: "yo", spanish: "tengo" },
+                    { person: "tú", spanish: "tienes" },
+                    { person: "él/ella/usted", spanish: "tiene" },
+                    { person: "nosotros/nosotras", spanish: "tenemos" },
+                    { person: "vosotros/vosotras", spanish: "tenéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "tienen" }
+                ],
+                "HACER (göra)": [
+                    { person: "yo", spanish: "hago" },
+                    { person: "tú", spanish: "haces" },
+                    { person: "él/ella/usted", spanish: "hace" },
+                    { person: "nosotros/nosotras", spanish: "hacemos" },
+                    { person: "vosotros/vosotras", spanish: "hacéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "hacen" }
+                ],
+                "PODER (kunna)": [
+                    { person: "yo", spanish: "puedo" },
+                    { person: "tú", spanish: "puedes" },
+                    { person: "él/ella/usted", spanish: "puede" },
+                    { person: "nosotros/nosotras", spanish: "podemos" },
+                    { person: "vosotros/vosotras", spanish: "podéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "pueden" }
+                ],
+                "IR (gå, åka)": [
+                    { person: "yo", spanish: "voy" },
+                    { person: "tú", spanish: "vas" },
+                    { person: "él/ella/usted", spanish: "va" },
+                    { person: "nosotros/nosotras", spanish: "vamos" },
+                    { person: "vosotros/vosotras", spanish: "vais" },
+                    { person: "ellos/ellas/ustedes", spanish: "van" }
+                ],
+                "DECIR (säga)": [
+                    { person: "yo", spanish: "digo" },
+                    { person: "tú", spanish: "dices" },
+                    { person: "él/ella/usted", spanish: "dice" },
+                    { person: "nosotros/nosotras", spanish: "decimos" },
+                    { person: "vosotros/vosotras", spanish: "decís" },
+                    { person: "ellos/ellas/ustedes", spanish: "dicen" }
+                ],
+                "VER (se)": [
+                    { person: "yo", spanish: "veo" },
+                    { person: "tú", spanish: "ves" },
+                    { person: "él/ella/usted", spanish: "ve" },
+                    { person: "nosotros/nosotras", spanish: "vemos" },
+                    { person: "vosotros/vosotras", spanish: "veis" },
+                    { person: "ellos/ellas/ustedes", spanish: "ven" }
+                ],
+                "DAR (ge)": [
+                    { person: "yo", spanish: "doy" },
+                    { person: "tú", spanish: "das" },
+                    { person: "él/ella/usted", spanish: "da" },
+                    { person: "nosotros/nosotras", spanish: "damos" },
+                    { person: "vosotros/vosotras", spanish: "dais" },
+                    { person: "ellos/ellas/ustedes", spanish: "dan" }
+                ],
+                "SABER (veta)": [
+                    { person: "yo", spanish: "sé" },
+                    { person: "tú", spanish: "sabes" },
+                    { person: "él/ella/usted", spanish: "sabe" },
+                    { person: "nosotros/nosotras", spanish: "sabemos" },
+                    { person: "vosotros/vosotras", spanish: "sabéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "saben" }
+                ],
+                "QUERER (vilja, älska)": [
+                    { person: "yo", spanish: "quiero" },
+                    { person: "tú", spanish: "quieres" },
+                    { person: "él/ella/usted", spanish: "quiere" },
+                    { person: "nosotros/nosotras", spanish: "queremos" },
+                    { person: "vosotros/vosotras", spanish: "queréis" },
+                    { person: "ellos/ellas/ustedes", spanish: "quieren" }
+                ],
+                "VENIR (komma)": [
+                    { person: "yo", spanish: "vengo" },
+                    { person: "tú", spanish: "vienes" },
+                    { person: "él/ella/usted", spanish: "viene" },
+                    { person: "nosotros/nosotras", spanish: "venimos" },
+                    { person: "vosotros/vosotras", spanish: "venís" },
+                    { person: "ellos/ellas/ustedes", spanish: "vienen" }
+                ],
+                "PONER (sätta, ställa, lägga)": [
+                    { person: "yo", spanish: "pongo" },
+                    { person: "tú", spanish: "pones" },
+                    { person: "él/ella/usted", spanish: "pone" },
+                    { person: "nosotros/nosotras", spanish: "ponemos" },
+                    { person: "vosotros/vosotras", spanish: "ponéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "ponen" }
+                ],
+                "SALIR (gå ut)": [
+                    { person: "yo", spanish: "salgo" },
+                    { person: "tú", spanish: "sales" },
+                    { person: "él/ella/usted", spanish: "sale" },
+                    { person: "nosotros/nosotras", spanish: "salimos" },
+                    { person: "vosotros/vosotras", spanish: "salís" },
+                    { person: "ellos/ellas/ustedes", spanish: "salen" }
+                ],
+                "TRAER (ta med sig)": [
+                    { person: "yo", spanish: "traigo" },
+                    { person: "tú", spanish: "traes" },
+                    { person: "él/ella/usted", spanish: "trae" },
+                    { person: "nosotros/nosotras", spanish: "traemos" },
+                    { person: "vosotros/vosotras", spanish: "traéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "traen" }
+                ],
+                "OBTENER (få, erhålla)": [
+                    { person: "yo", spanish: "obtengo" },
+                    { person: "tú", spanish: "obtienes" },
+                    { person: "él/ella/usted", spanish: "obtiene" },
+                    { person: "nosotros/nosotras", spanish: "obtenemos" },
+                    { person: "vosotros/vosotras", spanish: "obtenéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "obtienen" }
+                ],
+                "MANTENER (hålla, behålla)": [
+                    { person: "yo", spanish: "mantengo" },
+                    { person: "tú", spanish: "mantienes" },
+                    { person: "él/ella/usted", spanish: "mantiene" },
+                    { person: "nosotros/nosotras", spanish: "mantenemos" },
+                    { person: "vosotros/vosotras", spanish: "mantenéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "mantienen" }
+                ],
+                "HABER (hålla, ha)": [
+                    { person: "yo", spanish: "he" },
+                    { person: "tú", spanish: "has" },
+                    { person: "él/ella/usted", spanish: "ha" },
+                    { person: "nosotros/nosotras", spanish: "hemos" },
+                    { person: "vosotros/vosotras", spanish: "habéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "han" }
+                ],
+                "OÍR (höra)": [
+                    { person: "yo", spanish: "oigo" },
+                    { person: "tú", spanish: "oyes" },
+                    { person: "él/ella/usted", spanish: "oye" },
+                    { person: "nosotros/nosotras", spanish: "oímos" },
+                    { person: "vosotros/vosotras", spanish: "oís" },
+                    { person: "ellos/ellas/ustedes", spanish: "oyen" }
+                ],
+                "TRADUCIR (översätta)": [
+                    { person: "yo", spanish: "traduzco" },
+                    { person: "tú", spanish: "traduces" },
+                    { person: "él/ella/usted", spanish: "traduce" },
+                    { person: "nosotros/nosotras", spanish: "traducimos" },
+                    { person: "vosotros/vosotras", spanish: "traducís" },
+                    { person: "ellos/ellas/ustedes", spanish: "traducen" }
+                ]
+            }
+        };
+
+        generateHTML(verbData);
+    </script>
+</body>
+</html>

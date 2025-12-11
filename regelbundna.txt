@@ -1,0 +1,7 @@
+1	decir	säga		8	ser	vara
+2	estar	vara		9	tener	ha
+3	hacer	göra ( do )		10	venir	komma
+4	ir	gå,åka		11	ver	se
+5	poner	Ställa, sätta.. ( put)		12	oír	höra
+6	saber	veta		13	poder	kunna (can )
+7	salir	gå ut		14	haber	ha

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regelbundna Verb - Spanska Nu</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Tillbaka till startsidan</a>
+
+        <h1>🇪🇸 Regelbundna Verb 🇸🇪</h1>
+        <p class="subtitle">Öva spanska regelbundna verbböjningar och översättningar</p>
+
+        <div class="progress">
+            <div>Framsteg: <span id="correct-count">0</span> av <span id="total-count">0</span> korrekta</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="reset-btn" onclick="resetAll()">🔄 Rensa allt</button>
+            <button class="check-all-btn" onclick="checkAll()">✓ Kontrollera alla</button>
+            <button class="check-all-btn" onclick="fillAll()" style="background: #9b59b6;">📝 Fyll i alla svar</button>
+        </div>
+
+        <div id="verbs-container"></div>
+    </div>
+
+    <script src="assets/js/verbs.js"></script>
+    <script>
+        const verbData = {
+            "I. -AR-verb": {
+                "HABLAR (prata)": [
+                    { person: "yo", spanish: "hablo", swedish: "jag" },
+                    { person: "tú", spanish: "hablas", swedish: "du" },
+                    { person: "él/ella/usted", spanish: "habla", swedish: "han/hon/ni" },
+                    { person: "nosotros/nosotras", spanish: "hablamos", swedish: "vi" },
+                    { person: "vosotros/vosotras", spanish: "habláis", swedish: "ni" },
+                    { person: "ellos/ellas/ustedes", spanish: "hablan", swedish: "de/ni" }
+                ],
+                "ESTUDIAR (studera)": [
+                    { person: "yo", spanish: "estudio" },
+                    { person: "tú", spanish: "estudias" },
+                    { person: "él/ella/usted", spanish: "estudia" },
+                    { person: "nosotros/nosotras", spanish: "estudiamos" },
+                    { person: "vosotros/vosotras", spanish: "estudiáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "estudian" }
+                ],
+                "TRABAJAR (arbeta)": [
+                    { person: "yo", spanish: "trabajo" },
+                    { person: "tú", spanish: "trabajas" },
+                    { person: "él/ella/usted", spanish: "trabaja" },
+                    { person: "nosotros/nosotras", spanish: "trabajamos" },
+                    { person: "vosotros/vosotras", spanish: "trabajáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "trabajan" }
+                ],
+                "CANTAR (sjunga)": [
+                    { person: "yo", spanish: "canto" },
+                    { person: "tú", spanish: "cantas" },
+                    { person: "él/ella/usted", spanish: "canta" },
+                    { person: "nosotros/nosotras", spanish: "cantamos" },
+                    { person: "vosotros/vosotras", spanish: "cantáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "cantan" }
+                ],
+                "BAILAR (dansa)": [
+                    { person: "yo", spanish: "bailo" },
+                    { person: "tú", spanish: "bailas" },
+                    { person: "él/ella/usted", spanish: "baila" },
+                    { person: "nosotros/nosotras", spanish: "bailamos" },
+                    { person: "vosotros/vosotras", spanish: "bailáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "bailan" }
+                ],
+                "COMPRAR (köpa)": [
+                    { person: "yo", spanish: "compro" },
+                    { person: "tú", spanish: "compras" },
+                    { person: "él/ella/usted", spanish: "compra" },
+                    { person: "nosotros/nosotras", spanish: "compramos" },
+                    { person: "vosotros/vosotras", spanish: "compráis" },
+                    { person: "ellos/ellas/ustedes", spanish: "compran" }
+                ],
+                "MIRAR (titta)": [
+                    { person: "yo", spanish: "miro" },
+                    { person: "tú", spanish: "miras" },
+                    { person: "él/ella/usted", spanish: "mira" },
+                    { person: "nosotros/nosotras", spanish: "miramos" },
+                    { person: "vosotros/vosotras", spanish: "miráis" },
+                    { person: "ellos/ellas/ustedes", spanish: "miran" }
+                ],
+                "USAR (använda)": [
+                    { person: "yo", spanish: "uso" },
+                    { person: "tú", spanish: "usas" },
+                    { person: "él/ella/usted", spanish: "usa" },
+                    { person: "nosotros/nosotras", spanish: "usamos" },
+                    { person: "vosotros/vosotras", spanish: "usáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "usan" }
+                ],
+                "PREPARAR (förbereda)": [
+                    { person: "yo", spanish: "preparo" },
+                    { person: "tú", spanish: "preparas" },
+                    { person: "él/ella/usted", spanish: "prepara" },
+                    { person: "nosotros/nosotras", spanish: "preparamos" },
+                    { person: "vosotros/vosotras", spanish: "preparáis" },
+                    { person: "ellos/ellas/ustedes", spanish: "preparan" }
+                ],
+                "ENCONTRAR (hitta)": [
+                    { person: "yo", spanish: "encuentro" },
+                    { person: "tú", spanish: "encuentras" },
+                    { person: "él/ella/usted", spanish: "encuentra" },
+                    { person: "nosotros/nosotras", spanish: "encontramos" },
+                    { person: "vosotros/vosotras", spanish: "encontráis" },
+                    { person: "ellos/ellas/ustedes", spanish: "encuentran" }
+                ]
+            },
+            "II. -ER-verb": {
+                "COMER (äta)": [
+                    { person: "yo", spanish: "como", swedish: "jag" },
+                    { person: "tú", spanish: "comes", swedish: "du" },
+                    { person: "él/ella/usted", spanish: "come", swedish: "han/hon/ni" },
+                    { person: "nosotros/nosotras", spanish: "comemos", swedish: "vi" },
+                    { person: "vosotros/vosotras", spanish: "coméis", swedish: "ni" },
+                    { person: "ellos/ellas/ustedes", spanish: "comen", swedish: "de/ni" }
+                ],
+                "BEBER (dricka)": [
+                    { person: "yo", spanish: "bebo" },
+                    { person: "tú", spanish: "bebes" },
+                    { person: "él/ella/usted", spanish: "bebe" },
+                    { person: "nosotros/nosotras", spanish: "bebemos" },
+                    { person: "vosotros/vosotras", spanish: "bebéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "beben" }
+                ],
+                "APRENDER (lära sig)": [
+                    { person: "yo", spanish: "aprendo" },
+                    { person: "tú", spanish: "aprendes" },
+                    { person: "él/ella/usted", spanish: "aprende" },
+                    { person: "nosotros/nosotras", spanish: "aprendemos" },
+                    { person: "vosotros/vosotras", spanish: "aprendéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "aprenden" }
+                ],
+                "VENDER (sälja)": [
+                    { person: "yo", spanish: "vendo" },
+                    { person: "tú", spanish: "vendes" },
+                    { person: "él/ella/usted", spanish: "vende" },
+                    { person: "nosotros/nosotras", spanish: "vendemos" },
+                    { person: "vosotros/vosotras", spanish: "vendéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "venden" }
+                ],
+                "RESPONDER (svara)": [
+                    { person: "yo", spanish: "respondo" },
+                    { person: "tú", spanish: "respondes" },
+                    { person: "él/ella/usted", spanish: "responde" },
+                    { person: "nosotros/nosotras", spanish: "respondemos" },
+                    { person: "vosotros/vosotras", spanish: "respondéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "responden" }
+                ],
+                "CORRER (springa)": [
+                    { person: "yo", spanish: "corro" },
+                    { person: "tú", spanish: "corres" },
+                    { person: "él/ella/usted", spanish: "corre" },
+                    { person: "nosotros/nosotras", spanish: "corremos" },
+                    { person: "vosotros/vosotras", spanish: "corréis" },
+                    { person: "ellos/ellas/ustedes", spanish: "corren" }
+                ],
+                "CREER (tro)": [
+                    { person: "yo", spanish: "creo" },
+                    { person: "tú", spanish: "crees" },
+                    { person: "él/ella/usted", spanish: "cree" },
+                    { person: "nosotros/nosotras", spanish: "creemos" },
+                    { person: "vosotros/vosotras", spanish: "creéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "creen" }
+                ],
+                "CONOCER (känna till)": [
+                    { person: "yo", spanish: "conozco" },
+                    { person: "tú", spanish: "conoces" },
+                    { person: "él/ella/usted", spanish: "conoce" },
+                    { person: "nosotros/nosotras", spanish: "conocemos" },
+                    { person: "vosotros/vosotras", spanish: "conocéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "conocen" }
+                ],
+                "ROMPER (bryta)": [
+                    { person: "yo", spanish: "rompo" },
+                    { person: "tú", spanish: "rompes" },
+                    { person: "él/ella/usted", spanish: "rompe" },
+                    { person: "nosotros/nosotras", spanish: "rompemos" },
+                    { person: "vosotros/vosotras", spanish: "rompéis" },
+                    { person: "ellos/ellas/ustedes", spanish: "rompen" }
+                ]
+            },
+            "III. -IR-verb": {
+                "VIVIR (bo)": [
+                    { person: "yo", spanish: "vivo", swedish: "jag" },
+                    { person: "tú", spanish: "vives", swedish: "du" },
+                    { person: "él/ella/usted", spanish: "vive", swedish: "han/hon/ni" },
+                    { person: "nosotros/nosotras", spanish: "vivimos", swedish: "vi" },
+                    { person: "vosotros/vosotras", spanish: "vivís", swedish: "ni" },
+                    { person: "ellos/ellas/ustedes", spanish: "viven", swedish: "de/ni" }
+                ],
+                "ESCRIBIR (skriva)": [
+                    { person: "yo", spanish: "escribo" },
+                    { person: "tú", spanish: "escribes" },
+                    { person: "él/ella/usted", spanish: "escribe" },
+                    { person: "nosotros/nosotras", spanish: "escribimos" },
+                    { person: "vosotros/vosotras", spanish: "escribís" },
+                    { person: "ellos/ellas/ustedes", spanish: "escriben" }
+                ],
+                "DECIDIR (bestämma)": [
+                    { person: "yo", spanish: "decido" },
+                    { person: "tú", spanish: "decides" },
+                    { person: "él/ella/usted", spanish: "decide" },
+                    { person: "nosotros/nosotras", spanish: "decidimos" },
+                    { person: "vosotros/vosotras", spanish: "decidís" },
+                    { person: "ellos/ellas/ustedes", spanish: "deciden" }
+                ],
+                "RECIBIR (ta emot)": [
+                    { person: "yo", spanish: "recibo" },
+                    { person: "tú", spanish: "recibes" },
+                    { person: "él/ella/usted", spanish: "recibe" },
+                    { person: "nosotros/nosotras", spanish: "recibimos" },
+                    { person: "vosotros/vosotras", spanish: "recibís" },
+                    { person: "ellos/ellas/ustedes", spanish: "reciben" }
+                ],
+                "ASISTIR (delta)": [
+                    { person: "yo", spanish: "asisto" },
+                    { person: "tú", spanish: "asistes" },
+                    { person: "él/ella/usted", spanish: "asiste" },
+                    { person: "nosotros/nosotras", spanish: "asistimos" },
+                    { person: "vosotros/vosotras", spanish: "asistís" },
+                    { person: "ellos/ellas/ustedes", spanish: "asisten" }
+                ],
+                "PERMITIR (tillåta)": [
+                    { person: "yo", spanish: "permito" },
+                    { person: "tú", spanish: "permites" },
+                    { person: "él/ella/usted", spanish: "permite" },
+                    { person: "nosotros/nosotras", spanish: "permitimos" },
+                    { person: "vosotros/vosotras", spanish: "permitís" },
+                    { person: "ellos/ellas/ustedes", spanish: "permiten" }
+                ],
+                "SUBIR (gå upp)": [
+                    { person: "yo", spanish: "subo" },
+                    { person: "tú", spanish: "subes" },
+                    { person: "él/ella/usted", spanish: "sube" },
+                    { person: "nosotros/nosotras", spanish: "subimos" },
+                    { person: "vosotros/vosotras", spanish: "subís" },
+                    { person: "ellos/ellas/ustedes", spanish: "suben" }
+                ],
+                "COMPARTIR (dela)": [
+                    { person: "yo", spanish: "comparto" },
+                    { person: "tú", spanish: "compartes" },
+                    { person: "él/ella/usted", spanish: "comparte" },
+                    { person: "nosotros/nosotras", spanish: "compartimos" },
+                    { person: "vosotros/vosotras", spanish: "compartís" },
+                    { person: "ellos/ellas/ustedes", spanish: "comparten" }
+                ],
+                "ADMITIR (erkänna)": [
+                    { person: "yo", spanish: "admito" },
+                    { person: "tú", spanish: "admites" },
+                    { person: "él/ella/usted", spanish: "admite" },
+                    { person: "nosotros/nosotras", spanish: "admitimos" },
+                    { person: "vosotros/vosotras", spanish: "admitís" },
+                    { person: "ellos/ellas/ustedes", spanish: "admiten" }
+                ],
+                "EXISTIR (existera)": [
+                    { person: "yo", spanish: "existo" },
+                    { person: "tú", spanish: "existes" },
+                    { person: "él/ella/usted", spanish: "existe" },
+                    { person: "nosotros/nosotras", spanish: "existimos" },
+                    { person: "vosotros/vosotras", spanish: "existís" },
+                    { person: "ellos/ellas/ustedes", spanish: "existen" }
+                ],
+                "ABRIR (öppna)": [
+                    { person: "yo", spanish: "abro" },
+                    { person: "tú", spanish: "abres" },
+                    { person: "él/ella/usted", spanish: "abre" },
+                    { person: "nosotros/nosotras", spanish: "abrimos" },
+                    { person: "vosotros/vosotras", spanish: "abrís" },
+                    { person: "ellos/ellas/ustedes", spanish: "abren" }
+                ]
+            }
+        };
+
+        generateHTML(verbData);
+    </script>
+</body>
+</html>
