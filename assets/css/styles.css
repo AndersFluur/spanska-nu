@@ -320,56 +320,153 @@ input[type="text"].incorrect {
 
 @media (max-width: 768px) {
     .container {
-        padding: 15px;
+        padding: 10px;
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
+        margin-bottom: 5px;
     }
 
     .subtitle {
-        font-size: 1em;
+        font-size: 0.9em;
+        margin-bottom: 15px;
     }
 
-    .verb-table {
-        font-size: 14px;
-    }
-
-    .verb-table th, .verb-table td {
-        padding: 10px 8px;
-    }
-
-    input[type="text"] {
-        font-size: 16px;
-        padding: 12px;
-    }
-
-    .feedback {
-        font-size: 13px;
+    .progress {
+        padding: 10px;
+        font-size: 0.9em;
     }
 
     .controls {
         flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
     }
 
     .controls button {
         width: 100%;
-        font-size: 16px;
-        padding: 14px;
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .verb-section {
+        padding: 12px;
+        margin-bottom: 25px;
+    }
+
+    .verb-category {
+        font-size: 1.3em;
+        margin-bottom: 10px;
     }
 
     .verb-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
-        font-size: 1.1em;
+        font-size: 1em;
+        margin-bottom: 10px;
     }
 
     .verb-header > div {
         width: 100%;
     }
 
+    .verb-header span[style*="font-size: 1.2em"] {
+        font-size: 1.1em !important;
+    }
+
+    /* Make table mobile-friendly */
+    .verb-table {
+        font-size: 13px;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .verb-table thead {
+        display: none; /* Hide headers on mobile */
+    }
+
+    .verb-table tbody {
+        display: block;
+    }
+
+    .verb-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
+        background: white;
+    }
+
+    .verb-table td {
+        display: block;
+        padding: 8px 0;
+        border: none;
+        text-align: left !important;
+    }
+
+    /* Hide Swedish column on mobile to save space */
+    .verb-table td:nth-child(2):not(:first-child) {
+        display: none;
+    }
+
+    /* Person column - make it a header for each card */
+    .verb-table td:first-child {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #2E75B6;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 8px;
+    }
+
+    /* Input container - full width */
+    .input-container {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .input-container input[type="text"] {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .check-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* Speaker button - make smaller */
+    .speaker-btn {
+        font-size: 16px;
+        padding: 2px 6px;
+    }
+
+    /* Feedback column */
+    .feedback {
+        font-size: 12px;
+        min-width: auto;
+        margin-top: 4px;
+    }
+
     .menu-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .menu-card {
+        padding: 20px;
+    }
+
+    .back-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+        margin-bottom: 15px;
     }
 }

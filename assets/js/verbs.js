@@ -1,5 +1,19 @@
 let totalInputs = 0;
 let isMovingFocus = false;
+let audioAvailable = true;
+let audioWarningShown = false;
+let audioEnabled = false;
+
+// Initialize audio on first user interaction
+function initAudio() {
+    if (!audioEnabled) {
+        audioEnabled = true;
+        console.log('✓ Audio enabled by user interaction');
+        // Try playing a silent audio to unlock audio playback
+        const silentAudio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAADhACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQKAAAAAAAAA4a+T6WpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/7UEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAAC//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==');
+        silentAudio.play().catch(() => console.log('Silent audio failed, but that is OK'));
+    }
+}
 
 function normalize(str) {
     return str.toLowerCase().trim()
@@ -8,65 +22,96 @@ function normalize(str) {
         .replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/ñ/g, 'n');
 }
 
+function showAudioWarning() {
+    if (!audioWarningShown && !audioAvailable) {
+        audioWarningShown = true;
+        const warning = document.createElement('div');
+        warning.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #ff9800; color: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); z-index: 9999; max-width: 300px; font-size: 14px;';
+        warning.innerHTML = '🔇 <strong>Ljud inte tillgängligt</strong><br>Övningarna fungerar ändå!';
+        document.body.appendChild(warning);
+        setTimeout(() => warning.remove(), 5000);
+    }
+}
+
 function speakText(text) {
-    return new Promise((resolve, reject) => {
-        // Try browser's built-in speech synthesis first (most reliable)
-        if ('speechSynthesis' in window) {
-            try {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'es-ES';
-                utterance.rate = 0.85;
-                utterance.pitch = 1.0;
-                utterance.volume = 1.0;
+    // Enable audio on first call
+    initAudio();
 
-                utterance.onend = () => {
-                    console.log('Speech finished successfully');
-                    resolve();
-                };
+    return new Promise(async (resolve, reject) => {
+        // Try Google TTS first (works better and more reliable)
+        // Using gtx client which is more permissive
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=gtx&q=${encodeURIComponent(text)}`;
 
-                utterance.onerror = (event) => {
-                    console.error('Speech error:', event);
-                    // Try Google TTS as fallback
-                    tryGoogleTTS(text, resolve, reject);
-                };
-
-                // Small delay to ensure it works
-                setTimeout(() => {
-                    window.speechSynthesis.speak(utterance);
-                }, 50);
-            } catch (error) {
-                console.error('speechSynthesis error:', error);
-                tryGoogleTTS(text, resolve, reject);
+        try {
+            // Fetch the audio data to bypass CORS/browser restrictions
+            const response = await fetch(audioUrl);
+            if (!response.ok) {
+                throw new Error('Failed to fetch audio');
             }
-        } else {
-            // No speech synthesis support, try Google TTS
-            tryGoogleTTS(text, resolve, reject);
+
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const audio = new Audio(blobUrl);
+
+            audio.onended = () => {
+                console.log('✓ Google TTS finished');
+                URL.revokeObjectURL(blobUrl); // Clean up
+                resolve();
+            };
+
+            audio.onerror = (error) => {
+                console.log('Google TTS playback failed:', error);
+                URL.revokeObjectURL(blobUrl);
+                trySpeechSynthesis(text, resolve);
+            };
+
+            await audio.play();
+        } catch (error) {
+            console.log('Google TTS error:', error.message);
+            trySpeechSynthesis(text, resolve);
         }
     });
 }
 
-function tryGoogleTTS(text, resolve, reject) {
-    console.log('Trying Google TTS fallback');
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=${encodeURIComponent(text)}`;
-    const audio = new Audio(audioUrl);
-
-    audio.onended = () => {
-        console.log('Google TTS finished');
+function trySpeechSynthesis(text, resolve) {
+    if (!('speechSynthesis' in window)) {
+        console.error('Ingen ljuduppspelning tillgänglig');
+        audioAvailable = false;
+        showAudioWarning();
         resolve();
-    };
+        return;
+    }
 
-    audio.onerror = (error) => {
-        console.error('Google TTS failed:', error);
-        alert('Ljuduppspelning fungerar inte. Kontrollera att ljud är aktiverat i webbläsaren.');
-        resolve();
-    };
+    try {
+        window.speechSynthesis.cancel();
 
-    audio.play().catch((error) => {
-        console.error('Audio play failed:', error);
-        alert('Kan inte spela ljud. Klicka någonstans på sidan först (webbläsarens autoplay-policy).');
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.85;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+
+        utterance.onend = () => {
+            console.log('SpeechSynthesis finished');
+            resolve();
+        };
+
+        utterance.onerror = (event) => {
+            console.error('SpeechSynthesis error:', event.error);
+            if (event.error === 'synthesis-failed') {
+                audioAvailable = false;
+                showAudioWarning();
+            }
+            resolve();
+        };
+
+        window.speechSynthesis.speak(utterance);
+    } catch (error) {
+        console.error('speechSynthesis error:', error);
+        audioAvailable = false;
+        showAudioWarning();
         resolve();
-    });
+    }
 }
 
 function speakAndFill(inputId, correctAnswer, fullPhrase) {
