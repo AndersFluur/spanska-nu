@@ -408,8 +408,9 @@ input[type="text"].incorrect {
         text-align: left !important;
     }
 
-    /* Hide Swedish column on mobile to save space */
-    .verb-table td:nth-child(2):not(:first-child) {
+    /* Hide Swedish column on mobile to save space - only if it exists */
+    /* Swedish column is the 2nd column when there are 4 columns total */
+    .verb-table tr:has(td:nth-child(4)) td:nth-child(2) {
         display: none;
     }
 
