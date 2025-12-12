@@ -2,7 +2,9 @@
 
 let currentMode = 'list'; // 'list' or 'sequential'
 let currentSentenceIndex = 0;
+let currentVerbIndex = 0; // For list mode verb navigation
 let allSentences = []; // Flattened array of all sentences
+let verbKeys = []; // Array of verb keys in order
 let sentenceInputCounter = 0;
 
 // Initialize on page load
@@ -18,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Flatten sentence data into a single array for sequential mode
 function flattenSentences() {
     allSentences = [];
+    verbKeys = Object.keys(sentenceData);
+
     for (const [verbKey, verbData] of Object.entries(sentenceData)) {
         verbData.sentences.forEach((sentence, idx) => {
             allSentences.push({
@@ -42,42 +46,51 @@ function switchMode(mode) {
     document.getElementById('list-mode-btn').classList.toggle('active', mode === 'list');
     document.getElementById('sequential-mode-btn').classList.toggle('active', mode === 'sequential');
 
-    // Show/hide navigation
+    // Show/hide navigation based on mode
+    document.getElementById('list-nav').style.display = mode === 'list' ? 'flex' : 'none';
     document.getElementById('sequential-nav').style.display = mode === 'sequential' ? 'flex' : 'none';
 
     // Render appropriate view
     if (mode === 'list') {
-        renderListView();
+        renderListView(currentVerbIndex);
     } else {
         renderSequentialView(currentSentenceIndex);
     }
 }
 
-// Render list view (all sentences grouped by verb)
-function renderListView() {
+// Render list view (single verb with all its sentences)
+function renderListView(verbIndex) {
     const container = document.getElementById('sentences-container');
     container.innerHTML = '';
     sentenceInputCounter = 0;
 
-    for (const [verbKey, verbData] of Object.entries(sentenceData)) {
-        // Create verb group
-        const verbGroup = document.createElement('div');
-        verbGroup.className = 'verb-group';
-
-        // Verb header
-        const header = document.createElement('div');
-        header.className = 'verb-group-header';
-        header.textContent = `${verbData.infinitive} (${verbData.translation})`;
-        verbGroup.appendChild(header);
-
-        // Render each sentence
-        verbData.sentences.forEach((sentence, idx) => {
-            const card = createSentenceCard(sentence, verbKey, verbData);
-            verbGroup.appendChild(card);
-        });
-
-        container.appendChild(verbGroup);
+    if (verbIndex < 0 || verbIndex >= verbKeys.length) {
+        return;
     }
+
+    const verbKey = verbKeys[verbIndex];
+    const verbData = sentenceData[verbKey];
+
+    // Create verb group
+    const verbGroup = document.createElement('div');
+    verbGroup.className = 'verb-group';
+
+    // Verb header
+    const header = document.createElement('div');
+    header.className = 'verb-group-header';
+    header.textContent = `${verbData.infinitive} (${verbData.translation})`;
+    verbGroup.appendChild(header);
+
+    // Render each sentence
+    verbData.sentences.forEach((sentence, idx) => {
+        const card = createSentenceCard(sentence, verbKey, verbData);
+        verbGroup.appendChild(card);
+    });
+
+    container.appendChild(verbGroup);
+
+    // Update navigation
+    updateListNavigation(verbIndex);
 }
 
 // Render sequential view (single sentence)
@@ -231,7 +244,54 @@ function handleTooltipTap(e) {
     }
 }
 
-// Navigation functions
+// Navigation functions for list mode (verb-by-verb)
+function nextVerb() {
+    if (currentVerbIndex < verbKeys.length - 1) {
+        currentVerbIndex++;
+        renderListView(currentVerbIndex);
+    }
+}
+
+function previousVerb() {
+    if (currentVerbIndex > 0) {
+        currentVerbIndex--;
+        renderListView(currentVerbIndex);
+    }
+}
+
+// Update list mode navigation buttons
+function updateListNavigation(verbIndex) {
+    const prevBtn = document.querySelector('#list-nav .nav-btn:first-child');
+    const nextBtn = document.querySelector('#list-nav .nav-btn:last-child');
+    const counter = document.getElementById('verb-counter');
+
+    if (prevBtn && nextBtn && counter) {
+        prevBtn.disabled = verbIndex === 0;
+        nextBtn.disabled = verbIndex === verbKeys.length - 1;
+
+        // Update counter with current and next verb names
+        const currentVerb = sentenceData[verbKeys[verbIndex]].infinitive;
+        counter.textContent = `${currentVerb} (${verbIndex + 1} / ${verbKeys.length})`;
+
+        // Update next button text with next verb name
+        if (verbIndex < verbKeys.length - 1) {
+            const nextVerb = sentenceData[verbKeys[verbIndex + 1]].infinitive;
+            nextBtn.innerHTML = `Nästa → ${nextVerb}`;
+        } else {
+            nextBtn.textContent = 'Nästa';
+        }
+
+        // Update previous button text with previous verb name
+        if (verbIndex > 0) {
+            const prevVerb = sentenceData[verbKeys[verbIndex - 1]].infinitive;
+            prevBtn.innerHTML = `${prevVerb} ← Föregående`;
+        } else {
+            prevBtn.textContent = 'Föregående';
+        }
+    }
+}
+
+// Navigation functions for sequential mode (sentence-by-sentence)
 function nextSentence() {
     if (currentSentenceIndex < allSentences.length - 1) {
         currentSentenceIndex++;
