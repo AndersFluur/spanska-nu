@@ -321,6 +321,8 @@ input[type="text"].incorrect {
 @media (max-width: 768px) {
     .container {
         padding: 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     h1 {
@@ -369,6 +371,28 @@ input[type="text"].incorrect {
     }
 
     .verb-header > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    .verb-header input[type="text"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        box-sizing: border-box;
+    }
+
+    .verb-header .check-btn {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .verb-header .feedback {
         width: 100%;
     }
 
@@ -406,6 +430,9 @@ input[type="text"].incorrect {
         padding: 8px 0;
         border: none;
         text-align: left !important;
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
     }
 
     /* Hide Swedish column on mobile to save space - only if it exists */
@@ -429,6 +456,8 @@ input[type="text"].incorrect {
         flex-direction: column;
         gap: 8px;
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .input-container input[type="text"] {
@@ -439,8 +468,10 @@ input[type="text"].incorrect {
 
     .check-btn {
         width: 100%;
+        max-width: 100%;
         padding: 12px;
         font-size: 14px;
+        box-sizing: border-box;
     }
 
     /* Speaker button - make smaller */
