@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lär dig med meningar - Spanska Nu</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/sentences.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Tillbaka till startsidan</a>
+
+        <h1>🇪🇸 Lär dig med meningar 🇸🇪</h1>
+        <p class="subtitle">Öva verb i sammanhang - turistsituationer</p>
+
+        <div class="progress">
+            <div>Framsteg: <span id="correct-count">0</span> av <span id="total-count">0</span> korrekta</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="mode-toggle">
+            <button id="list-mode-btn" class="mode-btn active" onclick="switchMode('list')">
+                📋 Lista
+            </button>
+            <button id="sequential-mode-btn" class="mode-btn" onclick="switchMode('sequential')">
+                ➡️ Genomgång
+            </button>
+        </div>
+
+        <div class="controls">
+            <button class="reset-btn" onclick="resetAll()">🔄 Rensa allt</button>
+            <button class="check-all-btn" onclick="checkAll()">✓ Kontrollera alla</button>
+        </div>
+
+        <div id="sentences-container"></div>
+
+        <div id="sequential-nav" class="sequential-nav" style="display: none;">
+            <button class="nav-btn" onclick="previousSentence()">← Föregående</button>
+            <span id="sentence-counter" class="sentence-counter">1 / 18</span>
+            <button class="nav-btn" onclick="nextSentence()">Nästa →</button>
+        </div>
+    </div>
+
+    <script src="assets/js/verbs.js"></script>
+    <script src="assets/js/sentences.js"></script>
+    <script src="assets/js/sentence-learning.js"></script>
+</body>
+</html>
