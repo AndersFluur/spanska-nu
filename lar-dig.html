@@ -35,6 +35,13 @@
         <div class="controls">
             <button class="reset-btn" onclick="resetAll()">🔄 Rensa allt</button>
             <button class="check-all-btn" onclick="checkAll()">✓ Kontrollera alla</button>
+            <button class="check-all-btn" onclick="toggleStats()" style="background: #9b59b6;">📊 Statistik</button>
+        </div>
+
+        <div id="stats-panel" class="stats-panel" style="display: none;">
+            <h3>📊 Din framsteg</h3>
+            <div id="stats-content"></div>
+            <button onclick="toggleStats()" style="margin-top: 15px;">Stäng</button>
         </div>
 
         <div id="sentences-container"></div>

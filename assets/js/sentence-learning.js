@@ -7,11 +7,26 @@ let allSentences = []; // Flattened array of all sentences
 let verbKeys = []; // Array of verb keys in order
 let sentenceInputCounter = 0;
 
+// localStorage key for saving progress
+const STORAGE_KEY = 'spanska-nu-progress';
+
+// Progress tracking
+let sentenceProgress = {}; // { "ser-yo": { correct: true, attempts: 2, lastAttempt: timestamp } }
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     flattenSentences();
-    renderListView();
+    loadProgress();
+
+    // Render the appropriate view based on saved mode
+    if (currentMode === 'list') {
+        renderListView(currentVerbIndex);
+    } else {
+        renderSequentialView(currentSentenceIndex);
+    }
+
     updateProgress();
+    updateStatsDisplay();
 
     // Add mobile tooltip tap handlers
     document.addEventListener('click', handleTooltipTap);
@@ -38,6 +53,147 @@ function flattenSentences() {
     document.getElementById('total-count').textContent = totalInputs;
 }
 
+// Save progress to localStorage
+function saveProgress() {
+    const progressData = {
+        sentenceProgress: sentenceProgress,
+        currentVerbIndex: currentVerbIndex,
+        currentSentenceIndex: currentSentenceIndex,
+        currentMode: currentMode,
+        lastVisit: Date.now()
+    };
+
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
+        console.log('✓ Progress saved');
+    } catch (e) {
+        console.error('Failed to save progress:', e);
+    }
+}
+
+// Load progress from localStorage
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const progressData = JSON.parse(saved);
+            sentenceProgress = progressData.sentenceProgress || {};
+            currentVerbIndex = progressData.currentVerbIndex || 0;
+            currentSentenceIndex = progressData.currentSentenceIndex || 0;
+            currentMode = progressData.currentMode || 'list';
+
+            console.log('✓ Progress loaded:', Object.keys(sentenceProgress).length, 'sentences tracked');
+
+            // Update mode buttons to reflect saved mode
+            document.getElementById('list-mode-btn').classList.toggle('active', currentMode === 'list');
+            document.getElementById('sequential-mode-btn').classList.toggle('active', currentMode === 'sequential');
+        }
+    } catch (e) {
+        console.error('Failed to load progress:', e);
+    }
+}
+
+// Reset all progress
+function resetProgress() {
+    if (confirm('Är du säker på att du vill nollställa all framsteg? Detta kan inte ångras.')) {
+        sentenceProgress = {};
+        currentVerbIndex = 0;
+        currentSentenceIndex = 0;
+
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            console.log('✓ Progress reset');
+        } catch (e) {
+            console.error('Failed to reset progress:', e);
+        }
+
+        // Re-render and update
+        if (currentMode === 'list') {
+            renderListView(currentVerbIndex);
+        } else {
+            renderSequentialView(currentSentenceIndex);
+        }
+        updateProgress();
+        updateStatsDisplay();
+    }
+}
+
+// Get sentence key for progress tracking
+function getSentenceKey(verbKey, person) {
+    return `${verbKey}-${person}`;
+}
+
+// Track sentence attempt
+function trackSentenceAttempt(verbKey, person, isCorrect) {
+    const key = getSentenceKey(verbKey, person);
+
+    if (!sentenceProgress[key]) {
+        sentenceProgress[key] = {
+            correct: false,
+            attempts: 0,
+            lastAttempt: null
+        };
+    }
+
+    sentenceProgress[key].attempts++;
+    sentenceProgress[key].lastAttempt = Date.now();
+
+    if (isCorrect) {
+        sentenceProgress[key].correct = true;
+    }
+
+    saveProgress();
+    updateStatsDisplay();
+}
+
+// Get statistics
+function getStats() {
+    const totalSentences = allSentences.length;
+    const completedSentences = Object.values(sentenceProgress).filter(p => p.correct).length;
+    const totalAttempts = Object.values(sentenceProgress).reduce((sum, p) => sum + p.attempts, 0);
+
+    // Calculate per-verb stats
+    const verbStats = {};
+    for (const verbKey of verbKeys) {
+        const verbSentences = allSentences.filter(s => s.verb === verbKey);
+        const completed = verbSentences.filter(s => {
+            const key = getSentenceKey(s.verb, s.person);
+            return sentenceProgress[key]?.correct;
+        }).length;
+
+        verbStats[verbKey] = {
+            total: verbSentences.length,
+            completed: completed,
+            percentage: Math.round((completed / verbSentences.length) * 100)
+        };
+    }
+
+    return {
+        totalSentences,
+        completedSentences,
+        totalAttempts,
+        percentage: totalSentences > 0 ? Math.round((completedSentences / totalSentences) * 100) : 0,
+        verbStats
+    };
+}
+
+// Update stats display
+function updateStatsDisplay() {
+    const stats = getStats();
+    const correctCount = document.getElementById('correct-count');
+
+    if (correctCount) {
+        correctCount.textContent = stats.completedSentences;
+    }
+
+    // Update progress bar
+    const progressFill = document.getElementById('progress-fill');
+    if (progressFill) {
+        progressFill.style.width = stats.percentage + '%';
+        progressFill.textContent = stats.percentage + '%';
+    }
+}
+
 // Switch between list and sequential modes
 function switchMode(mode) {
     currentMode = mode;
@@ -56,6 +212,9 @@ function switchMode(mode) {
     } else {
         renderSequentialView(currentSentenceIndex);
     }
+
+    // Save mode preference
+    saveProgress();
 }
 
 // Render list view (single verb with all its sentences)
@@ -159,17 +318,27 @@ function createSentenceCard(sentence, verbKey, verbData, isSequential = false) {
     input.className = 'sentence-input';
     input.placeholder = '___';
     input.dataset.correct = sentence.blank;
-    input.onblur = function() { checkAnswer(inputId, sentence.blank, false); };
+    input.dataset.verbKey = verbKey;
+    input.dataset.person = sentence.person;
+    input.onblur = function() { checkSentenceAnswer(inputId, sentence.blank, false, verbKey, sentence.person); };
     input.onkeypress = function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            checkAnswer(inputId, sentence.blank, true);
+            checkSentenceAnswer(inputId, sentence.blank, true, verbKey, sentence.person);
             if (currentMode === 'sequential' && input.classList.contains('correct')) {
                 // Auto-advance on correct answer in sequential mode
                 setTimeout(() => nextSentence(), 500);
             }
         }
     };
+
+    // Restore saved answer if it exists
+    const sentenceKey = getSentenceKey(verbKey, sentence.person);
+    if (sentenceProgress[sentenceKey]?.correct) {
+        input.value = sentence.blank;
+        input.classList.add('correct');
+    }
+
     sentenceText.appendChild(input);
 
     // After blank
@@ -206,13 +375,19 @@ function createSentenceCard(sentence, verbKey, verbData, isSequential = false) {
     const checkBtn = document.createElement('button');
     checkBtn.className = 'check-btn';
     checkBtn.textContent = 'Kolla';
-    checkBtn.onclick = function() { checkAnswer(inputId, sentence.blank, true); };
+    checkBtn.onclick = function() { checkSentenceAnswer(inputId, sentence.blank, true, verbKey, sentence.person); };
     actions.appendChild(checkBtn);
 
     // Feedback div
     const feedback = document.createElement('div');
     feedback.className = 'feedback';
     feedback.id = `${inputId}-feedback`;
+
+    // Show checkmark if already completed
+    if (sentenceProgress[sentenceKey]?.correct) {
+        feedback.innerHTML = '<span class="correct-icon">✓</span>';
+    }
+
     actions.appendChild(feedback);
 
     card.appendChild(actions);
@@ -250,11 +425,26 @@ function handleTooltipTap(e) {
     }
 }
 
+// Check sentence answer and track progress
+function checkSentenceAnswer(inputId, correctAnswer, forceCheck, verbKey, person) {
+    // Call the original checkAnswer function from verbs.js
+    checkAnswer(inputId, correctAnswer, forceCheck);
+
+    // Track the attempt
+    const input = document.getElementById(inputId);
+    if (input) {
+        const userAnswer = input.value.trim();
+        const isCorrect = normalize(userAnswer) === normalize(correctAnswer);
+        trackSentenceAttempt(verbKey, person, isCorrect);
+    }
+}
+
 // Navigation functions for list mode (verb-by-verb)
 function nextVerb() {
     if (currentVerbIndex < verbKeys.length - 1) {
         currentVerbIndex++;
         renderListView(currentVerbIndex);
+        saveProgress();
     }
 }
 
@@ -262,6 +452,7 @@ function previousVerb() {
     if (currentVerbIndex > 0) {
         currentVerbIndex--;
         renderListView(currentVerbIndex);
+        saveProgress();
     }
 }
 
@@ -302,6 +493,7 @@ function nextSentence() {
     if (currentSentenceIndex < allSentences.length - 1) {
         currentSentenceIndex++;
         renderSequentialView(currentSentenceIndex);
+        saveProgress();
     }
 }
 
@@ -309,23 +501,13 @@ function previousSentence() {
     if (currentSentenceIndex > 0) {
         currentSentenceIndex--;
         renderSequentialView(currentSentenceIndex);
+        saveProgress();
     }
 }
 
-// Override resetAll to work with sentence inputs
+// Override resetAll to reset progress and clear inputs
 function resetAll() {
-    const inputs = document.querySelectorAll('.sentence-input');
-    inputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('correct', 'incorrect');
-    });
-
-    const feedbacks = document.querySelectorAll('.feedback');
-    feedbacks.forEach(feedback => {
-        feedback.innerHTML = '';
-    });
-
-    updateProgress();
+    resetProgress();
 }
 
 // Override checkAll to work with sentence inputs
@@ -333,8 +515,67 @@ function checkAll() {
     const inputs = document.querySelectorAll('.sentence-input');
     inputs.forEach(input => {
         const correctAnswer = input.dataset.correct;
+        const verbKey = input.dataset.verbKey;
+        const person = input.dataset.person;
         if (input.value.trim() !== '') {
-            checkAnswer(input.id, correctAnswer, false);
+            checkSentenceAnswer(input.id, correctAnswer, false, verbKey, person);
         }
     });
+}
+
+// Toggle statistics panel
+function toggleStats() {
+    const panel = document.getElementById('stats-panel');
+    const isVisible = panel.style.display !== 'none';
+
+    if (isVisible) {
+        panel.style.display = 'none';
+    } else {
+        // Update stats content
+        const stats = getStats();
+        const content = document.getElementById('stats-content');
+
+        let html = `
+            <div style="margin-bottom: 20px;">
+                <h4>Översikt</h4>
+                <p><strong>Totalt klarat:</strong> ${stats.completedSentences} / ${stats.totalSentences} meningar (${stats.percentage}%)</p>
+                <p><strong>Totalt antal försök:</strong> ${stats.totalAttempts}</p>
+            </div>
+            <h4>Per verb</h4>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f0f0f0;">
+                        <th style="padding: 8px; text-align: left;">Verb</th>
+                        <th style="padding: 8px; text-align: center;">Klarat</th>
+                        <th style="padding: 8px; text-align: center;">%</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        for (const verbKey of verbKeys) {
+            const verbData = sentenceData[verbKey];
+            const verbStat = stats.verbStats[verbKey];
+            const rowColor = verbStat.percentage === 100 ? '#e8f8f5' : 'white';
+
+            html += `
+                <tr style="background: ${rowColor};">
+                    <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;">${verbData.infinitive}</td>
+                    <td style="padding: 8px; text-align: center; border-bottom: 1px solid #e0e0e0;">${verbStat.completed} / ${verbStat.total}</td>
+                    <td style="padding: 8px; text-align: center; border-bottom: 1px solid #e0e0e0;">${verbStat.percentage}%</td>
+                </tr>
+            `;
+        }
+
+        html += `
+                </tbody>
+            </table>
+        `;
+
+        content.innerHTML = html;
+        panel.style.display = 'block';
+
+        // Scroll to stats panel
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }

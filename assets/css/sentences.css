@@ -203,6 +203,43 @@
     margin-top: 25px;
 }
 
+/* Stats Panel */
+.stats-panel {
+    background: white;
+    border: 2px solid #9b59b6;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stats-panel h3 {
+    color: #9b59b6;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.stats-panel h4 {
+    color: #2E75B6;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.stats-panel button {
+    padding: 10px 20px;
+    background: #9b59b6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.stats-panel button:hover {
+    background: #8e44ad;
+}
+
 /* Sequential Navigation */
 .sequential-nav {
     display: flex;
