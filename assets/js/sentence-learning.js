@@ -129,6 +129,12 @@ function createSentenceCard(sentence, verbKey, verbData, isSequential = false) {
 
     const inputId = `sent-${sentenceInputCounter++}`;
 
+    // Add verb infinitive as heading
+    const verbHeading = document.createElement('div');
+    verbHeading.className = 'sentence-verb-heading';
+    verbHeading.textContent = `${verbData.infinitive} (${verbData.translation})`;
+    card.appendChild(verbHeading);
+
     // Build sentence with blank
     const sentenceParts = sentence.spanish.split('___');
 
@@ -185,14 +191,14 @@ function createSentenceCard(sentence, verbKey, verbData, isSequential = false) {
     const actions = document.createElement('div');
     actions.className = 'sentence-actions';
 
-    // Speaker button
+    // Speaker button (speaks and fills in answer)
     const speakerBtn = document.createElement('button');
     speakerBtn.className = 'speaker-btn';
     speakerBtn.innerHTML = '🔊';
-    speakerBtn.title = `Lyssna: ${sentence.spanish.replace('___', sentence.blank)}`;
+    speakerBtn.title = `Lyssna och fyll i: ${sentence.spanish.replace('___', sentence.blank)}`;
     speakerBtn.onclick = function() {
         const fullSentence = sentence.spanish.replace('___', sentence.blank);
-        speakText(fullSentence);
+        speakAndFill(inputId, sentence.blank, fullSentence);
     };
     actions.appendChild(speakerBtn);
 

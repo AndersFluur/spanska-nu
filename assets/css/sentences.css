@@ -60,6 +60,15 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+.sentence-verb-heading {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2E75B6;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 /* Sentence Text with Tooltip */
 .tooltip-wrapper {
     position: relative;
@@ -248,6 +257,11 @@
 
     .sentence-card {
         padding: 15px;
+    }
+
+    .sentence-verb-heading {
+        font-size: 1em;
+        margin-bottom: 10px;
     }
 
     .sentence-text {
