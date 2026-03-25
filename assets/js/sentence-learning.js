@@ -5,6 +5,10 @@ let currentSentenceIndex = 0;
 let currentVerbIndex = 0; // For list mode verb navigation
 let allSentences = []; // Flattened array of all sentences
 let verbKeys = []; // Array of verb keys in order
+let filteredSentences = [];
+let filteredVerbKeys = [];
+let currentArea = 'all';
+let currentLevel = 1;
 let sentenceInputCounter = 0;
 
 // localStorage key for saving progress
@@ -16,7 +20,11 @@ let sentenceProgress = {}; // { "ser-yo": { correct: true, attempts: 2, lastAtte
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     flattenSentences();
+    renderStudyOverview();
+    renderLevelToggle();
+    renderAreaFilters();
     loadProgress();
+    updateFilteredContent();
 
     // Render the appropriate view based on saved mode
     if (currentMode === 'list') {
@@ -48,9 +56,150 @@ function flattenSentences() {
         });
     }
 
-    // Update total count
-    totalInputs = allSentences.length;
-    document.getElementById('total-count').textContent = totalInputs;
+    updateFilteredContent();
+}
+
+function getSentenceLevel(sentence) {
+    const verbLevel = verbLevelMap[sentence.verb] || 3;
+
+    if (verbLevel === 1) {
+        if (['yo', 'tú', 'él/ella'].includes(sentence.person)) {
+            return 1;
+        }
+        if (sentence.person === 'nosotros') {
+            return 2;
+        }
+        return 3;
+    }
+
+    if (verbLevel === 2) {
+        if (['yo', 'tú', 'él/ella'].includes(sentence.person)) {
+            return 2;
+        }
+        return 3;
+    }
+
+    return 3;
+}
+
+function updateFilteredContent() {
+    const levelFilteredVerbKeys = verbKeys.filter(verbKey => (verbLevelMap[verbKey] || 3) <= currentLevel);
+
+    filteredVerbKeys = currentArea === 'all'
+        ? [...levelFilteredVerbKeys]
+        : levelFilteredVerbKeys.filter(verbKey => verbAreaMap[verbKey] === currentArea);
+
+    filteredSentences = allSentences.filter(sentence => {
+        const matchesLevel = getSentenceLevel(sentence) <= currentLevel;
+        const matchesArea = currentArea === 'all' || verbAreaMap[sentence.verb] === currentArea;
+        return matchesLevel && matchesArea;
+    });
+
+    currentVerbIndex = Math.min(currentVerbIndex, Math.max(filteredVerbKeys.length - 1, 0));
+    currentSentenceIndex = Math.min(currentSentenceIndex, Math.max(filteredSentences.length - 1, 0));
+
+    document.getElementById('total-count').textContent = filteredSentences.length;
+}
+
+function renderStudyOverview() {
+    const container = document.getElementById('study-overview');
+    if (!container) {
+        return;
+    }
+
+    const areaKeys = Object.keys(studyAreas).filter(key => key !== 'all');
+    container.innerHTML = areaKeys.map(areaKey => {
+        const area = studyAreas[areaKey];
+        const verbs = area.focus.map(verbKey => sentenceData[verbKey].infinitive).join(', ');
+        return `
+            <div class="study-card">
+                <h3>${area.title}</h3>
+                <p>${area.description}</p>
+                <div class="study-card-meta">Fokusverb: ${verbs}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function getLevelStats() {
+    return {
+        verbCount: verbKeys.filter(verbKey => (verbLevelMap[verbKey] || 3) <= currentLevel).length,
+        sentenceCount: allSentences.filter(sentence => getSentenceLevel(sentence) <= currentLevel).length
+    };
+}
+
+function renderLevelToggle() {
+    const container = document.getElementById('level-toggle');
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = Object.entries(sentenceLevelOptions).map(([levelKey, label]) => `
+        <button class="level-btn ${Number(levelKey) === currentLevel ? 'active' : ''}" data-level="${levelKey}">
+            ${label}
+        </button>
+    `).join('');
+
+    container.querySelectorAll('.level-btn').forEach(button => {
+        button.addEventListener('click', () => setLevel(Number(button.dataset.level)));
+    });
+
+    const stats = getLevelStats();
+    const summary = document.getElementById('level-summary');
+    if (summary) {
+        summary.textContent = `${sentenceLevelOptions[currentLevel]} innehåller ${stats.verbCount} verb och ${stats.sentenceCount} meningar att nöta in.`;
+    }
+}
+
+function renderAreaFilters() {
+    const container = document.getElementById('area-filters');
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = Object.entries(studyAreas).map(([areaKey, area]) => `
+        <button class="area-filter-btn ${areaKey === currentArea ? 'active' : ''}" data-area="${areaKey}">
+            ${area.title}
+        </button>
+    `).join('');
+
+    container.querySelectorAll('.area-filter-btn').forEach(button => {
+        button.addEventListener('click', () => setAreaFilter(button.dataset.area));
+    });
+}
+
+function setAreaFilter(areaKey) {
+    currentArea = areaKey;
+    currentVerbIndex = 0;
+    currentSentenceIndex = 0;
+    updateFilteredContent();
+    renderAreaFilters();
+
+    if (currentMode === 'list') {
+        renderListView(currentVerbIndex);
+    } else {
+        renderSequentialView(currentSentenceIndex);
+    }
+
+    updateProgress();
+    saveProgress();
+}
+
+function setLevel(level) {
+    currentLevel = level;
+    currentVerbIndex = 0;
+    currentSentenceIndex = 0;
+    updateFilteredContent();
+    renderLevelToggle();
+
+    if (currentMode === 'list') {
+        renderListView(currentVerbIndex);
+    } else {
+        renderSequentialView(currentSentenceIndex);
+    }
+
+    updateProgress();
+    saveProgress();
 }
 
 // Save progress to localStorage
@@ -60,6 +209,8 @@ function saveProgress() {
         currentVerbIndex: currentVerbIndex,
         currentSentenceIndex: currentSentenceIndex,
         currentMode: currentMode,
+        currentArea: currentArea,
+        currentLevel: currentLevel,
         lastVisit: Date.now()
     };
 
@@ -81,12 +232,16 @@ function loadProgress() {
             currentVerbIndex = progressData.currentVerbIndex || 0;
             currentSentenceIndex = progressData.currentSentenceIndex || 0;
             currentMode = progressData.currentMode || 'list';
+            currentArea = progressData.currentArea || 'all';
+            currentLevel = progressData.currentLevel || 1;
 
             console.log('✓ Progress loaded:', Object.keys(sentenceProgress).length, 'sentences tracked');
 
             // Update mode buttons to reflect saved mode
             document.getElementById('list-mode-btn').classList.toggle('active', currentMode === 'list');
             document.getElementById('sequential-mode-btn').classList.toggle('active', currentMode === 'sequential');
+            renderLevelToggle();
+            renderAreaFilters();
         }
     } catch (e) {
         console.error('Failed to load progress:', e);
@@ -99,6 +254,8 @@ function resetProgress() {
         sentenceProgress = {};
         currentVerbIndex = 0;
         currentSentenceIndex = 0;
+        currentArea = 'all';
+        currentLevel = 1;
 
         try {
             localStorage.removeItem(STORAGE_KEY);
@@ -106,6 +263,10 @@ function resetProgress() {
         } catch (e) {
             console.error('Failed to reset progress:', e);
         }
+
+        renderLevelToggle();
+        renderAreaFilters();
+        updateFilteredContent();
 
         // Re-render and update
         if (currentMode === 'list') {
@@ -148,14 +309,20 @@ function trackSentenceAttempt(verbKey, person, isCorrect) {
 
 // Get statistics
 function getStats() {
-    const totalSentences = allSentences.length;
-    const completedSentences = Object.values(sentenceProgress).filter(p => p.correct).length;
-    const totalAttempts = Object.values(sentenceProgress).reduce((sum, p) => sum + p.attempts, 0);
+    const totalSentences = filteredSentences.length;
+    const completedSentences = filteredSentences.filter(sentence => {
+        const key = getSentenceKey(sentence.verb, sentence.person);
+        return sentenceProgress[key]?.correct;
+    }).length;
+    const totalAttempts = filteredSentences.reduce((sum, sentence) => {
+        const key = getSentenceKey(sentence.verb, sentence.person);
+        return sum + (sentenceProgress[key]?.attempts || 0);
+    }, 0);
 
     // Calculate per-verb stats
     const verbStats = {};
-    for (const verbKey of verbKeys) {
-        const verbSentences = allSentences.filter(s => s.verb === verbKey);
+    for (const verbKey of filteredVerbKeys) {
+        const verbSentences = filteredSentences.filter(s => s.verb === verbKey);
         const completed = verbSentences.filter(s => {
             const key = getSentenceKey(s.verb, s.person);
             return sentenceProgress[key]?.correct;
@@ -223,12 +390,22 @@ function renderListView(verbIndex) {
     container.innerHTML = '';
     sentenceInputCounter = 0;
 
-    if (verbIndex < 0 || verbIndex >= verbKeys.length) {
+    if (filteredVerbKeys.length === 0) {
+        container.innerHTML = '<div class="empty-state">Inga övningar hittades i det här delområdet ännu.</div>';
+        updateListNavigation(0);
         return;
     }
 
-    const verbKey = verbKeys[verbIndex];
+    if (verbIndex < 0 || verbIndex >= filteredVerbKeys.length) {
+        return;
+    }
+
+    const verbKey = filteredVerbKeys[verbIndex];
     const verbData = sentenceData[verbKey];
+    const area = studyAreas[verbAreaMap[verbKey]];
+    const visibleSentences = verbData.sentences.filter(sentence =>
+        getSentenceLevel({ ...sentence, verb: verbKey }) <= currentLevel
+    );
 
     // Create verb group
     const verbGroup = document.createElement('div');
@@ -237,11 +414,14 @@ function renderListView(verbIndex) {
     // Verb header
     const header = document.createElement('div');
     header.className = 'verb-group-header';
-    header.textContent = `${verbData.infinitive} (${verbData.translation})`;
+    header.innerHTML = `
+        <div>${verbData.infinitive} (${verbData.translation})</div>
+        <div class="verb-group-subtitle">${area.title} • ${visibleSentences.length} meningar i detta steg</div>
+    `;
     verbGroup.appendChild(header);
 
     // Render each sentence
-    verbData.sentences.forEach((sentence, idx) => {
+    visibleSentences.forEach((sentence, idx) => {
         const card = createSentenceCard(sentence, verbKey, verbData);
         verbGroup.appendChild(card);
     });
@@ -258,27 +438,33 @@ function renderSequentialView(index) {
     container.innerHTML = '';
     sentenceInputCounter = 0;
 
-    if (index < 0 || index >= allSentences.length) {
+    if (filteredSentences.length === 0) {
+        container.innerHTML = '<div class="empty-state">Inga övningar hittades i det här delområdet ännu.</div>';
+        document.getElementById('sentence-counter').textContent = '0 / 0';
         return;
     }
 
-    const sentenceData = allSentences[index];
-    const card = createSentenceCard(sentenceData, sentenceData.verb, {
-        infinitive: sentenceData.verbInfinitive,
-        translation: sentenceData.verbTranslation
+    if (index < 0 || index >= filteredSentences.length) {
+        return;
+    }
+
+    const sentence = filteredSentences[index];
+    const card = createSentenceCard(sentence, sentence.verb, {
+        infinitive: sentence.verbInfinitive,
+        translation: sentence.verbTranslation
     }, true);
 
     card.classList.add('sequential-card');
     container.appendChild(card);
 
     // Update counter
-    document.getElementById('sentence-counter').textContent = `${index + 1} / ${allSentences.length}`;
+    document.getElementById('sentence-counter').textContent = `${index + 1} / ${filteredSentences.length}`;
 
     // Update navigation buttons
     const prevBtn = document.querySelector('.sequential-nav button:first-child');
     const nextBtn = document.querySelector('.sequential-nav button:last-child');
     prevBtn.disabled = index === 0;
-    nextBtn.disabled = index === allSentences.length - 1;
+    nextBtn.disabled = index === filteredSentences.length - 1;
 }
 
 // Create a sentence card element
@@ -441,7 +627,7 @@ function checkSentenceAnswer(inputId, correctAnswer, forceCheck, verbKey, person
 
 // Navigation functions for list mode (verb-by-verb)
 function nextVerb() {
-    if (currentVerbIndex < verbKeys.length - 1) {
+    if (currentVerbIndex < filteredVerbKeys.length - 1) {
         currentVerbIndex++;
         renderListView(currentVerbIndex);
         saveProgress();
@@ -463,16 +649,25 @@ function updateListNavigation(verbIndex) {
     const counter = document.getElementById('verb-counter');
 
     if (prevBtn && nextBtn && counter) {
+        if (filteredVerbKeys.length === 0) {
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            prevBtn.textContent = 'Föregående';
+            nextBtn.textContent = 'Nästa';
+            counter.textContent = 'Inga verb';
+            return;
+        }
+
         prevBtn.disabled = verbIndex === 0;
-        nextBtn.disabled = verbIndex === verbKeys.length - 1;
+        nextBtn.disabled = verbIndex === filteredVerbKeys.length - 1;
 
         // Update counter with current and next verb names
-        const currentVerb = sentenceData[verbKeys[verbIndex]].infinitive;
-        counter.textContent = `${currentVerb} (${verbIndex + 1} / ${verbKeys.length})`;
+        const currentVerb = sentenceData[filteredVerbKeys[verbIndex]].infinitive;
+        counter.textContent = `${currentVerb} (${verbIndex + 1} / ${filteredVerbKeys.length})`;
 
         // Update next button text with next verb name
-        if (verbIndex < verbKeys.length - 1) {
-            const nextVerb = sentenceData[verbKeys[verbIndex + 1]].infinitive;
+        if (verbIndex < filteredVerbKeys.length - 1) {
+            const nextVerb = sentenceData[filteredVerbKeys[verbIndex + 1]].infinitive;
             nextBtn.innerHTML = `Nästa → ${nextVerb}`;
         } else {
             nextBtn.textContent = 'Nästa';
@@ -480,7 +675,7 @@ function updateListNavigation(verbIndex) {
 
         // Update previous button text with previous verb name
         if (verbIndex > 0) {
-            const prevVerb = sentenceData[verbKeys[verbIndex - 1]].infinitive;
+            const prevVerb = sentenceData[filteredVerbKeys[verbIndex - 1]].infinitive;
             prevBtn.innerHTML = `${prevVerb} ← Föregående`;
         } else {
             prevBtn.textContent = 'Föregående';
@@ -490,7 +685,7 @@ function updateListNavigation(verbIndex) {
 
 // Navigation functions for sequential mode (sentence-by-sentence)
 function nextSentence() {
-    if (currentSentenceIndex < allSentences.length - 1) {
+    if (currentSentenceIndex < filteredSentences.length - 1) {
         currentSentenceIndex++;
         renderSequentialView(currentSentenceIndex);
         saveProgress();
@@ -538,6 +733,7 @@ function toggleStats() {
         let html = `
             <div style="margin-bottom: 20px;">
                 <h4>Översikt</h4>
+                <p><strong>Delområde:</strong> ${studyAreas[currentArea].title}</p>
                 <p><strong>Totalt klarat:</strong> ${stats.completedSentences} / ${stats.totalSentences} meningar (${stats.percentage}%)</p>
                 <p><strong>Totalt antal försök:</strong> ${stats.totalAttempts}</p>
             </div>
@@ -553,7 +749,7 @@ function toggleStats() {
                 <tbody>
         `;
 
-        for (const verbKey of verbKeys) {
+        for (const verbKey of filteredVerbKeys) {
             const verbData = sentenceData[verbKey];
             const verbStat = stats.verbStats[verbKey];
             const rowColor = verbStat.percentage === 100 ? '#e8f8f5' : 'white';

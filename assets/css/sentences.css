@@ -1,5 +1,74 @@
 /* Sentence-based Learning Styles */
 
+.study-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.study-card {
+    background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
+    border: 1px solid #d7e3f7;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.study-card h3 {
+    color: #2E75B6;
+    margin: 0 0 10px 0;
+    font-size: 1.05em;
+}
+
+.study-card p {
+    margin: 0;
+    color: #4f5d75;
+    line-height: 1.5;
+}
+
+.study-card-meta {
+    margin-top: 12px;
+    font-size: 0.9em;
+    color: #6b7a90;
+    font-weight: bold;
+}
+
+.area-filter-panel {
+    background: #f7f9fc;
+    border: 1px solid #dfe7f3;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.area-filter-header p {
+    margin: 0 0 14px 0;
+    color: #5f6c80;
+}
+
+.area-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.area-filter-btn {
+    padding: 10px 16px;
+    background: white;
+    color: #2E75B6;
+    border: 2px solid #c8d8f0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.area-filter-btn.active {
+    background: #2E75B6;
+    color: white;
+    border-color: #2E75B6;
+}
+
 /* Mode Toggle */
 .mode-toggle {
     display: flex;
@@ -43,6 +112,13 @@
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 2px solid #4472C4;
+}
+
+.verb-group-subtitle {
+    margin-top: 6px;
+    font-size: 0.58em;
+    color: #6b7a90;
+    font-weight: 600;
 }
 
 /* Sentence Cards */
@@ -203,6 +279,15 @@
     margin-top: 25px;
 }
 
+.empty-state {
+    padding: 30px;
+    background: #f8f9fa;
+    border: 2px dashed #cfd8e3;
+    border-radius: 12px;
+    text-align: center;
+    color: #5f6c80;
+}
+
 /* Stats Panel */
 .stats-panel {
     background: white;
@@ -282,6 +367,23 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    .study-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .area-filter-panel {
+        padding: 16px;
+    }
+
+    .area-filters {
+        flex-direction: column;
+    }
+
+    .area-filter-btn {
+        width: 100%;
+        border-radius: 10px;
+    }
+
     .mode-toggle {
         flex-direction: column;
         gap: 10px;

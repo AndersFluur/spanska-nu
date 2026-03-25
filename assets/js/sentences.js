@@ -1,5 +1,5 @@
-// Sentence data for learning Spanish verbs in context
-// 20 most important tourist verbs with 6 sentences each (120 total)
+// Sentence data for learning basic Spanish communication in context
+// 20 core verbs grouped into beginner-friendly communication areas
 
 const sentenceData = {
     "ser": {
@@ -17,19 +17,19 @@ const sentenceData = {
             },
             {
                 person: "tú",
-                spanish: "¿Tú ___ turista?",
+                spanish: "¿Tú ___ sueco?",
                 blank: "eres",
-                swedish: "Är du turist?",
-                context: "introduction",
-                vocabulary: ["turista"]
+                swedish: "Är du svensk?",
+                context: "general",
+                vocabulary: ["sueco"]
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ la guía del museo",
+                spanish: "Ella ___ mi amiga",
                 blank: "es",
-                swedish: "Hon är museets guide",
-                context: "sightseeing",
-                vocabulary: ["guía", "museo"]
+                swedish: "Hon är min vän",
+                context: "general",
+                vocabulary: ["mi", "amiga"]
             },
             {
                 person: "nosotros",
@@ -65,11 +65,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ en el hotel",
+                spanish: "Yo ___ en casa",
                 blank: "estoy",
-                swedish: "Jag är på hotellet",
-                context: "hotel",
-                vocabulary: ["en", "el hotel"]
+                swedish: "Jag är hemma",
+                context: "general",
+                vocabulary: ["en", "casa"]
             },
             {
                 person: "tú",
@@ -81,19 +81,19 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "El restaurante ___ cerrado",
+                spanish: "La puerta ___ cerrada",
                 blank: "está",
-                swedish: "Restaurangen är stängd",
-                context: "restaurant",
-                vocabulary: ["restaurante", "cerrado"]
+                swedish: "Dörren är stängd",
+                context: "general",
+                vocabulary: ["puerta", "cerrada"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ en la plaza",
+                spanish: "Nosotros ___ aqui",
                 blank: "estamos",
-                swedish: "Vi är på torget",
-                context: "directions",
-                vocabulary: ["plaza"]
+                swedish: "Vi är här",
+                context: "general",
+                vocabulary: ["aqui"]
             },
             {
                 person: "vosotros",
@@ -121,11 +121,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ hambre",
+                spanish: "Yo ___ tiempo",
                 blank: "tengo",
-                swedish: "Jag är hungrig",
-                context: "restaurant",
-                vocabulary: ["hambre"]
+                swedish: "Jag har tid",
+                context: "general",
+                vocabulary: ["tiempo"]
             },
             {
                 person: "tú",
@@ -137,11 +137,11 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ un mapa de la ciudad",
+                spanish: "Ella ___ agua",
                 blank: "tiene",
-                swedish: "Hon har en karta över staden",
-                context: "directions",
-                vocabulary: ["mapa", "ciudad"]
+                swedish: "Hon har vatten",
+                context: "general",
+                vocabulary: ["agua"]
             },
             {
                 person: "nosotros",
@@ -233,51 +233,51 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ una cerveza",
+                spanish: "Yo ___ agua",
                 blank: "quiero",
-                swedish: "Jag vill ha en öl",
-                context: "restaurant",
-                vocabulary: ["cerveza"]
+                swedish: "Jag vill ha vatten",
+                context: "general",
+                vocabulary: ["agua"]
             },
             {
                 person: "tú",
-                spanish: "¿Tú ___ el menú?",
+                spanish: "¿Tú ___ venir?",
                 blank: "quieres",
-                swedish: "Vill du ha menyn?",
-                context: "restaurant",
-                vocabulary: ["menú"]
+                swedish: "Vill du komma?",
+                context: "general",
+                vocabulary: ["venir"]
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ visitar el castillo",
+                spanish: "Ella ___ descansar",
                 blank: "quiere",
-                swedish: "Hon vill besöka slottet",
-                context: "sightseeing",
-                vocabulary: ["visitar", "castillo"]
+                swedish: "Hon vill vila",
+                context: "general",
+                vocabulary: ["descansar"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ dos habitaciones",
+                spanish: "Nosotros ___ hablar",
                 blank: "queremos",
-                swedish: "Vi vill ha två rum",
-                context: "hotel",
-                vocabulary: ["dos", "habitaciones"]
+                swedish: "Vi vill prata",
+                context: "general",
+                vocabulary: ["hablar"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ cenar aquí?",
+                spanish: "¿Vosotros ___ salir ahora?",
                 blank: "queréis",
-                swedish: "Vill ni äta middag här?",
-                context: "restaurant",
-                vocabulary: ["cenar", "aquí"]
+                swedish: "Vill ni gå ut nu?",
+                context: "general",
+                vocabulary: ["salir", "ahora"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellos ___ ir al centro",
+                spanish: "Ellos ___ descansar",
                 blank: "quieren",
-                swedish: "De vill gå till centrum",
-                context: "directions",
-                vocabulary: ["centro"]
+                swedish: "De vill vila",
+                context: "general",
+                vocabulary: ["descansar"]
             }
         ]
     },
@@ -289,11 +289,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "¿___ pagar con tarjeta?",
+                spanish: "¿___ entrar?",
                 blank: "Puedo",
-                swedish: "Kan jag betala med kort?",
-                context: "shopping",
-                vocabulary: ["pagar", "tarjeta"]
+                swedish: "Kan jag komma in?",
+                context: "general",
+                vocabulary: ["entrar"]
             },
             {
                 person: "tú",
@@ -313,11 +313,11 @@ const sentenceData = {
             },
             {
                 person: "nosotros",
-                spanish: "¿___ ver la habitación?",
+                spanish: "¿___ hablar ahora?",
                 blank: "Podemos",
-                swedish: "Kan vi se rummet?",
-                context: "hotel",
-                vocabulary: ["ver", "habitación"]
+                swedish: "Kan vi prata nu?",
+                context: "general",
+                vocabulary: ["hablar", "ahora"]
             },
             {
                 person: "vosotros",
@@ -345,11 +345,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ una reserva",
+                spanish: "Yo ___ la comida",
                 blank: "hago",
-                swedish: "Jag gör en bokning",
-                context: "restaurant",
-                vocabulary: ["reserva"]
+                swedish: "Jag lagar maten",
+                context: "general",
+                vocabulary: ["comida"]
             },
             {
                 person: "tú",
@@ -369,19 +369,19 @@ const sentenceData = {
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ turismo",
+                spanish: "Nosotros ___ ejercicio",
                 blank: "hacemos",
-                swedish: "Vi turerar",
-                context: "sightseeing",
-                vocabulary: ["turismo"]
+                swedish: "Vi tränar",
+                context: "general",
+                vocabulary: ["ejercicio"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ fotos?",
+                spanish: "¿Vosotros ___ la cena?",
                 blank: "hacéis",
-                swedish: "Tar ni foton?",
-                context: "sightseeing",
-                vocabulary: ["fotos"]
+                swedish: "Lagar ni middagen?",
+                context: "general",
+                vocabulary: ["cena"]
             },
             {
                 person: "ellos/ellas",
@@ -401,11 +401,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ español",
+                spanish: "Yo ___ un poco de español",
                 blank: "hablo",
-                swedish: "Jag pratar spanska",
+                swedish: "Jag pratar lite spanska",
                 context: "introduction",
-                vocabulary: ["español"]
+                vocabulary: ["un poco", "de", "español"]
             },
             {
                 person: "tú",
@@ -425,19 +425,19 @@ const sentenceData = {
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ con el guía",
+                spanish: "Nosotros ___ con amigos",
                 blank: "hablamos",
-                swedish: "Vi pratar med guiden",
-                context: "sightseeing",
-                vocabulary: ["con", "guía"]
+                swedish: "Vi pratar med vänner",
+                context: "general",
+                vocabulary: ["con", "amigos"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ sueco?",
+                spanish: "¿Vosotros ___ mucho?",
                 blank: "habláis",
-                swedish: "Pratar ni svenska?",
-                context: "introduction",
-                vocabulary: ["sueco"]
+                swedish: "Pratar ni mycket?",
+                context: "general",
+                vocabulary: ["mucho"]
             },
             {
                 person: "ellos/ellas",
@@ -457,11 +457,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ paella",
+                spanish: "Yo ___ pan",
                 blank: "como",
-                swedish: "Jag äter paella",
-                context: "restaurant",
-                vocabulary: ["paella"]
+                swedish: "Jag äter bröd",
+                context: "general",
+                vocabulary: ["pan"]
             },
             {
                 person: "tú",
@@ -473,34 +473,34 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Él ___ en el restaurante",
+                spanish: "Él ___ en casa",
                 blank: "come",
-                swedish: "Han äter på restaurangen",
-                context: "restaurant",
-                vocabulary: ["en", "restaurante"]
+                swedish: "Han äter hemma",
+                context: "general",
+                vocabulary: ["en", "casa"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ tapas",
+                spanish: "Nosotros ___ juntos",
                 blank: "comemos",
-                swedish: "Vi äter tapas",
-                context: "restaurant",
-                vocabulary: ["tapas"]
+                swedish: "Vi äter tillsammans",
+                context: "general",
+                vocabulary: ["juntos"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ pescado?",
+                spanish: "¿Vosotros ___ ahora?",
                 blank: "coméis",
-                swedish: "Äter ni fisk?",
-                context: "restaurant",
-                vocabulary: ["pescado"]
+                swedish: "Äter ni nu?",
+                context: "general",
+                vocabulary: ["ahora"]
             },
             {
                 person: "ellos/ellas",
                 spanish: "Ellas ___ mucho",
                 blank: "comen",
                 swedish: "De äter mycket",
-                context: "restaurant",
+                context: "general",
                 vocabulary: ["mucho"]
             }
         ]
@@ -516,47 +516,47 @@ const sentenceData = {
                 spanish: "Yo ___ agua",
                 blank: "bebo",
                 swedish: "Jag dricker vatten",
-                context: "restaurant",
+                context: "general",
                 vocabulary: ["agua"]
             },
             {
                 person: "tú",
-                spanish: "¿Tú ___ vino?",
+                spanish: "¿Tú ___ café?",
                 blank: "bebes",
-                swedish: "Dricker du vin?",
-                context: "restaurant",
-                vocabulary: ["vino"]
+                swedish: "Dricker du kaffe?",
+                context: "general",
+                vocabulary: ["café"]
             },
             {
                 person: "él/ella",
                 spanish: "Ella ___ café",
                 blank: "bebe",
                 swedish: "Hon dricker kaffe",
-                context: "restaurant",
+                context: "general",
                 vocabulary: ["café"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ sangría",
+                spanish: "Nosotros ___ té",
                 blank: "bebemos",
-                swedish: "Vi dricker sangría",
-                context: "restaurant",
-                vocabulary: ["sangría"]
+                swedish: "Vi dricker te",
+                context: "general",
+                vocabulary: ["té"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ cerveza?",
+                spanish: "¿Vosotros ___ agua?",
                 blank: "bebéis",
-                swedish: "Dricker ni öl?",
-                context: "restaurant",
-                vocabulary: ["cerveza"]
+                swedish: "Dricker ni vatten?",
+                context: "general",
+                vocabulary: ["agua"]
             },
             {
                 person: "ellos/ellas",
                 spanish: "Ellos ___ zumo",
                 blank: "beben",
                 swedish: "De dricker juice",
-                context: "restaurant",
+                context: "general",
                 vocabulary: ["zumo"]
             }
         ]
@@ -569,51 +569,51 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ recuerdos",
+                spanish: "Yo ___ pan",
                 blank: "compro",
-                swedish: "Jag köper souvenirer",
-                context: "shopping",
-                vocabulary: ["recuerdos"]
+                swedish: "Jag köper bröd",
+                context: "general",
+                vocabulary: ["pan"]
             },
             {
                 person: "tú",
                 spanish: "¿Tú ___ esto?",
                 blank: "compras",
                 swedish: "Köper du det här?",
-                context: "shopping",
+                context: "general",
                 vocabulary: ["esto"]
             },
             {
                 person: "él/ella",
-                spanish: "Él ___ un billete",
+                spanish: "Él ___ fruta",
                 blank: "compra",
-                swedish: "Han köper en biljett",
-                context: "transport",
-                vocabulary: ["billete"]
+                swedish: "Han köper frukt",
+                context: "general",
+                vocabulary: ["fruta"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ en el mercado",
+                spanish: "Nosotros ___ comida",
                 blank: "compramos",
-                swedish: "Vi handlar på marknaden",
-                context: "shopping",
-                vocabulary: ["mercado"]
+                swedish: "Vi köper mat",
+                context: "general",
+                vocabulary: ["comida"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ regalos?",
+                spanish: "¿Vosotros ___ pan?",
                 blank: "compráis",
-                swedish: "Köper ni presenter?",
-                context: "shopping",
-                vocabulary: ["regalos"]
+                swedish: "Köper ni bröd?",
+                context: "general",
+                vocabulary: ["pan"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellas ___ postales",
+                spanish: "Ellas ___ ropa",
                 blank: "compran",
-                swedish: "De köper vykort",
-                context: "shopping",
-                vocabulary: ["postales"]
+                swedish: "De köper kläder",
+                context: "general",
+                vocabulary: ["ropa"]
             }
         ]
     },
@@ -625,11 +625,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ un taxi",
+                spanish: "Yo ___ ayuda",
                 blank: "necesito",
-                swedish: "Jag behöver en taxi",
-                context: "transport",
-                vocabulary: ["taxi"]
+                swedish: "Jag behöver hjälp",
+                context: "general",
+                vocabulary: ["ayuda"]
             },
             {
                 person: "tú",
@@ -641,35 +641,35 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ un mapa",
+                spanish: "Ella ___ tiempo",
                 blank: "necesita",
-                swedish: "Hon behöver en karta",
-                context: "directions",
-                vocabulary: ["mapa"]
+                swedish: "Hon behöver tid",
+                context: "general",
+                vocabulary: ["tiempo"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ una mesa",
+                spanish: "Nosotros ___ silencio",
                 blank: "necesitamos",
-                swedish: "Vi behöver ett bord",
-                context: "restaurant",
-                vocabulary: ["mesa"]
+                swedish: "Vi behöver lugn",
+                context: "general",
+                vocabulary: ["silencio"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ wifi?",
+                spanish: "¿Vosotros ___ tiempo?",
                 blank: "necesitáis",
-                swedish: "Behöver ni wifi?",
-                context: "hotel",
-                vocabulary: ["wifi"]
+                swedish: "Behöver ni tid?",
+                context: "general",
+                vocabulary: ["tiempo"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellos ___ cambiar dinero",
+                spanish: "Ellos ___ ayuda",
                 blank: "necesitan",
-                swedish: "De behöver växla pengar",
+                swedish: "De behöver hjälp",
                 context: "general",
-                vocabulary: ["cambiar", "dinero"]
+                vocabulary: ["ayuda"]
             }
         ]
     },
@@ -681,35 +681,35 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ la catedral",
+                spanish: "Yo ___ la casa",
                 blank: "veo",
-                swedish: "Jag ser katedralen",
-                context: "sightseeing",
-                vocabulary: ["catedral"]
+                swedish: "Jag ser huset",
+                context: "general",
+                vocabulary: ["casa"]
             },
             {
                 person: "tú",
-                spanish: "¿Tú ___ el bus?",
+                spanish: "¿Tú ___ la puerta?",
                 blank: "ves",
-                swedish: "Ser du bussen?",
-                context: "transport",
-                vocabulary: ["bus"]
+                swedish: "Ser du dörren?",
+                context: "general",
+                vocabulary: ["puerta"]
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ las montañas",
+                spanish: "Ella ___ la calle",
                 blank: "ve",
-                swedish: "Hon ser bergen",
-                context: "sightseeing",
-                vocabulary: ["montañas"]
+                swedish: "Hon ser gatan",
+                context: "general",
+                vocabulary: ["calle"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ el mar",
+                spanish: "Nosotros ___ la televisión",
                 blank: "vemos",
-                swedish: "Vi ser havet",
-                context: "sightseeing",
-                vocabulary: ["mar"]
+                swedish: "Vi tittar på tv",
+                context: "general",
+                vocabulary: ["televisión"]
             },
             {
                 person: "vosotros",
@@ -721,11 +721,11 @@ const sentenceData = {
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellos ___ un espectáculo",
+                spanish: "Ellos ___ la television",
                 blank: "ven",
-                swedish: "De ser en föreställning",
-                context: "sightseeing",
-                vocabulary: ["espectáculo"]
+                swedish: "De tittar på tv",
+                context: "general",
+                vocabulary: ["television"]
             }
         ]
     },
@@ -737,51 +737,51 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo no ___ el hotel",
+                spanish: "Yo no ___ la calle",
                 blank: "encuentro",
-                swedish: "Jag hittar inte hotellet",
+                swedish: "Jag hittar inte gatan",
                 context: "directions",
-                vocabulary: ["no", "hotel"]
+                vocabulary: ["no", "calle"]
             },
             {
                 person: "tú",
-                spanish: "¿Tú ___ la estación?",
+                spanish: "¿Tú ___ la llave?",
                 blank: "encuentras",
-                swedish: "Hittar du stationen?",
-                context: "directions",
-                vocabulary: ["estación"]
+                swedish: "Hittar du nyckeln?",
+                context: "general",
+                vocabulary: ["llave"]
             },
             {
                 person: "él/ella",
-                spanish: "Él ___ un restaurante bueno",
+                spanish: "Él ___ una solución",
                 blank: "encuentra",
-                swedish: "Han hittar en bra restaurang",
-                context: "restaurant",
-                vocabulary: ["bueno"]
+                swedish: "Han hittar en lösning",
+                context: "general",
+                vocabulary: ["solución"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ la plaza",
+                spanish: "Nosotros ___ la casa",
                 blank: "encontramos",
-                swedish: "Vi hittar torget",
-                context: "directions",
-                vocabulary: ["plaza"]
+                swedish: "Vi hittar huset",
+                context: "general",
+                vocabulary: ["casa"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ el museo?",
+                spanish: "¿Vosotros ___ el camino?",
                 blank: "encontráis",
-                swedish: "Hittar ni museet?",
-                context: "sightseeing",
-                vocabulary: ["museo"]
+                swedish: "Hittar ni vägen?",
+                context: "general",
+                vocabulary: ["camino"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellas ___ una farmacia",
+                spanish: "Ellas ___ una respuesta",
                 blank: "encuentran",
-                swedish: "De hittar ett apotek",
+                swedish: "De hittar ett svar",
                 context: "general",
-                vocabulary: ["farmacia"]
+                vocabulary: ["respuesta"]
             }
         ]
     },
@@ -817,27 +817,27 @@ const sentenceData = {
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ del aeropuerto",
+                spanish: "Nosotros ___ de casa",
                 blank: "venimos",
-                swedish: "Vi kommer från flygplatsen",
-                context: "transport",
-                vocabulary: ["del", "aeropuerto"]
+                swedish: "Vi kommer hemifrån",
+                context: "general",
+                vocabulary: ["de", "casa"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ a la fiesta?",
+                spanish: "¿Vosotros ___ hoy?",
                 blank: "venís",
-                swedish: "Kommer ni till festen?",
+                swedish: "Kommer ni idag?",
                 context: "general",
-                vocabulary: ["fiesta"]
+                vocabulary: ["hoy"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellos ___ en tren",
+                spanish: "Ellos ___ juntos",
                 blank: "vienen",
-                swedish: "De kommer med tåg",
-                context: "transport",
-                vocabulary: ["tren"]
+                swedish: "De kommer tillsammans",
+                context: "general",
+                vocabulary: ["juntos"]
             }
         ]
     },
@@ -849,11 +849,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ del hotel",
+                spanish: "Yo ___ de casa",
                 blank: "salgo",
-                swedish: "Jag lämnar hotellet",
-                context: "hotel",
-                vocabulary: ["del", "hotel"]
+                swedish: "Jag går hemifrån",
+                context: "general",
+                vocabulary: ["de", "casa"]
             },
             {
                 person: "tú",
@@ -865,11 +865,11 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "El tren ___ a las ocho",
+                spanish: "Ella ___ temprano",
                 blank: "sale",
-                swedish: "Tåget går klockan åtta",
-                context: "transport",
-                vocabulary: ["tren", "a las ocho"]
+                swedish: "Hon går ut tidigt",
+                context: "general",
+                vocabulary: ["temprano"]
             },
             {
                 person: "nosotros",
@@ -905,11 +905,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ en Suecia",
+                spanish: "Yo ___ en Estocolmo",
                 blank: "vivo",
-                swedish: "Jag bor i Sverige",
+                swedish: "Jag bor i Stockholm",
                 context: "introduction",
-                vocabulary: ["en", "Suecia"]
+                vocabulary: ["en", "Estocolmo"]
             },
             {
                 person: "tú",
@@ -921,11 +921,11 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ en Madrid",
+                spanish: "Ella ___ cerca",
                 blank: "vive",
-                swedish: "Hon bor i Madrid",
-                context: "introduction",
-                vocabulary: ["Madrid"]
+                swedish: "Hon bor nära",
+                context: "general",
+                vocabulary: ["cerca"]
             },
             {
                 person: "nosotros",
@@ -948,7 +948,7 @@ const sentenceData = {
                 spanish: "Ellos ___ en el centro",
                 blank: "viven",
                 swedish: "De bor i centrum",
-                context: "introduction",
+                context: "general",
                 vocabulary: ["centro"]
             }
         ]
@@ -961,11 +961,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ un banco",
+                spanish: "Yo ___ trabajo",
                 blank: "busco",
-                swedish: "Jag letar efter en bank",
-                context: "directions",
-                vocabulary: ["banco"]
+                swedish: "Jag letar efter arbete",
+                context: "general",
+                vocabulary: ["trabajo"]
             },
             {
                 person: "tú",
@@ -977,35 +977,35 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Él ___ la parada de bus",
+                spanish: "Él ___ sus llaves",
                 blank: "busca",
-                swedish: "Han letar efter busshållplatsen",
-                context: "transport",
-                vocabulary: ["parada", "bus"]
+                swedish: "Han letar efter sina nycklar",
+                context: "general",
+                vocabulary: ["llaves"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ un hotel",
+                spanish: "Nosotros ___ una respuesta",
                 blank: "buscamos",
-                swedish: "Vi letar efter ett hotell",
-                context: "hotel",
-                vocabulary: ["hotel"]
+                swedish: "Vi letar efter ett svar",
+                context: "general",
+                vocabulary: ["respuesta"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ la salida?",
+                spanish: "¿Vosotros ___ a Ana?",
                 blank: "buscáis",
-                swedish: "Letar ni efter utgången?",
-                context: "directions",
-                vocabulary: ["salida"]
+                swedish: "Letar ni efter Ana?",
+                context: "general",
+                vocabulary: ["Ana"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellas ___ un restaurante",
+                spanish: "Ellas ___ trabajo",
                 blank: "buscan",
-                swedish: "De letar efter en restaurang",
-                context: "restaurant",
-                vocabulary: ["restaurante"]
+                swedish: "De letar efter arbete",
+                context: "general",
+                vocabulary: ["trabajo"]
             }
         ]
     },
@@ -1017,11 +1017,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo no ___ dónde está",
+                spanish: "Yo no ___ la respuesta",
                 blank: "sé",
-                swedish: "Jag vet inte var det är",
-                context: "directions",
-                vocabulary: ["no", "dónde", "está"]
+                swedish: "Jag vet inte svaret",
+                context: "general",
+                vocabulary: ["no", "respuesta"]
             },
             {
                 person: "tú",
@@ -1033,35 +1033,35 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ cocinar muy bien",
+                spanish: "Ella ___ la respuesta",
                 blank: "sabe",
-                swedish: "Hon kan laga mat väldigt bra",
+                swedish: "Hon vet svaret",
                 context: "general",
-                vocabulary: ["cocinar", "muy bien"]
+                vocabulary: ["respuesta"]
             },
             {
                 person: "nosotros",
-                spanish: "Nosotros ___ la dirección",
+                spanish: "Nosotros ___ qué hacer",
                 blank: "sabemos",
-                swedish: "Vi vet adressen",
-                context: "directions",
-                vocabulary: ["dirección"]
+                swedish: "Vi vet vad vi ska göra",
+                context: "general",
+                vocabulary: ["qué", "hacer"]
             },
             {
                 person: "vosotros",
-                spanish: "¿Vosotros ___ el precio?",
+                spanish: "¿Vosotros ___ la verdad?",
                 blank: "sabéis",
-                swedish: "Vet ni priset?",
-                context: "shopping",
-                vocabulary: ["precio"]
+                swedish: "Vet ni sanningen?",
+                context: "general",
+                vocabulary: ["verdad"]
             },
             {
                 person: "ellos/ellas",
-                spanish: "Ellos ___ nadar",
+                spanish: "Ellos ___ qué pasa",
                 blank: "saben",
-                swedish: "De kan simma",
+                swedish: "De vet vad som händer",
                 context: "general",
-                vocabulary: ["nadar"]
+                vocabulary: ["qué", "pasa"]
             }
         ]
     },
@@ -1073,11 +1073,11 @@ const sentenceData = {
         sentences: [
             {
                 person: "yo",
-                spanish: "Yo ___ que sí",
+                spanish: "Yo ___ mi nombre",
                 blank: "digo",
-                swedish: "Jag säger ja",
+                swedish: "Jag säger mitt namn",
                 context: "general",
-                vocabulary: ["que", "sí"]
+                vocabulary: ["mi", "nombre"]
             },
             {
                 person: "tú",
@@ -1089,18 +1089,18 @@ const sentenceData = {
             },
             {
                 person: "él/ella",
-                spanish: "Ella ___ que es caro",
+                spanish: "Ella ___ que no",
                 blank: "dice",
-                swedish: "Hon säger att det är dyrt",
-                context: "shopping",
-                vocabulary: ["que", "caro"]
+                swedish: "Hon säger nej",
+                context: "general",
+                vocabulary: ["que", "no"]
             },
             {
                 person: "nosotros",
                 spanish: "Nosotros ___ adiós",
                 blank: "decimos",
                 swedish: "Vi säger hejdå",
-                context: "introduction",
+                context: "general",
                 vocabulary: ["adiós"]
             },
             {
@@ -1121,6 +1121,91 @@ const sentenceData = {
             }
         ]
     }
+};
+
+const studyAreas = {
+    all: {
+        title: "Alla delområden",
+        description: "Träna hela startpaketet för att kunna förstå och bygga enkla meningar i vardagen.",
+        focus: ["hälsa", "fråga", "behov", "vardag", "service"]
+    },
+    introductions: {
+        title: "Hälsa och presentera dig",
+        description: "Säga vem du är, var du kommer ifrån och prata enkelt om språk och boende.",
+        focus: ["ser", "estar", "hablar", "vivir"]
+    },
+    needs: {
+        title: "Uttrycka behov och önskemål",
+        description: "Berätta vad du vill, behöver, har eller kan i vanliga samtal.",
+        focus: ["tener", "querer", "poder", "necesitar"]
+    },
+    directions: {
+        title: "Fråga, hitta och ta dig fram",
+        description: "Prata om att gå, komma, lämna, leta och hitta rätt.",
+        focus: ["ir", "venir", "salir", "buscar", "encontrar"]
+    },
+    service: {
+        title: "Mat, köp och service",
+        description: "Beställa, köpa och hantera enkla ärenden i butik eller på restaurang.",
+        focus: ["comer", "beber", "comprar", "hacer"]
+    },
+    conversation: {
+        title: "Förstå och svara",
+        description: "Se, veta och säga tillräckligt för att hålla igång ett enkelt samtal.",
+        focus: ["ver", "saber", "decir"]
+    }
+};
+
+const sentenceLevelOptions = {
+    1: "Steg 1: Basmönster",
+    2: "Steg 2: Vardagsmönster",
+    3: "Steg 3: Utbyggnad"
+};
+
+const verbLevelMap = {
+    ser: 1,
+    estar: 1,
+    tener: 1,
+    hablar: 1,
+    vivir: 1,
+    querer: 2,
+    poder: 2,
+    necesitar: 2,
+    ir: 2,
+    buscar: 2,
+    comer: 2,
+    beber: 2,
+    venir: 3,
+    salir: 3,
+    encontrar: 3,
+    comprar: 3,
+    hacer: 3,
+    ver: 3,
+    saber: 3,
+    decir: 3
+};
+
+const verbAreaMap = {
+    ser: "introductions",
+    estar: "introductions",
+    hablar: "introductions",
+    vivir: "introductions",
+    tener: "needs",
+    querer: "needs",
+    poder: "needs",
+    necesitar: "needs",
+    ir: "directions",
+    venir: "directions",
+    salir: "directions",
+    buscar: "directions",
+    encontrar: "directions",
+    comer: "service",
+    beber: "service",
+    comprar: "service",
+    hacer: "service",
+    ver: "conversation",
+    saber: "conversation",
+    decir: "conversation"
 };
 
 // Export for use in sentence-learning.js

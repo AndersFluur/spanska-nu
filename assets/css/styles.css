@@ -318,6 +318,108 @@ input[type="text"].incorrect {
     transform: translateY(-2px);
 }
 
+.info-panel {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f4f8fb;
+    border: 1px solid #d7e3f0;
+    border-radius: 12px;
+}
+
+.info-panel h2 {
+    margin-top: 0;
+}
+
+.info-list {
+    margin-left: 20px;
+    line-height: 1.9;
+    color: #555;
+}
+
+.word-class-intro {
+    margin-bottom: 16px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.direction-panel {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f7f5ff;
+    border: 1px solid #ddd6f7;
+    border-radius: 12px;
+}
+
+.direction-panel-header p {
+    margin: 0 0 14px 0;
+    color: #666;
+}
+
+.direction-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.direction-btn {
+    padding: 10px 16px;
+    background: white;
+    color: #5b4bb7;
+    border: 2px solid #d5cff7;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.direction-btn.active {
+    background: #5b4bb7;
+    color: white;
+    border-color: #5b4bb7;
+}
+
+.level-panel {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f4faf4;
+    border: 1px solid #d4ead4;
+    border-radius: 12px;
+}
+
+.level-panel-header p {
+    margin: 0 0 14px 0;
+    color: #666;
+}
+
+.level-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.level-btn {
+    padding: 10px 16px;
+    background: white;
+    color: #2f7a45;
+    border: 2px solid #cde5d2;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.level-btn.active {
+    background: #2f7a45;
+    color: white;
+    border-color: #2f7a45;
+}
+
+.level-summary {
+    margin: 14px 0 0 0;
+    color: #4f5f50;
+    line-height: 1.6;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -500,5 +602,35 @@ input[type="text"].incorrect {
         font-size: 14px;
         padding: 8px 16px;
         margin-bottom: 15px;
+    }
+
+    .info-panel {
+        padding: 16px;
+    }
+
+    .direction-panel {
+        padding: 16px;
+    }
+
+    .level-panel {
+        padding: 16px;
+    }
+
+    .direction-toggle {
+        flex-direction: column;
+    }
+
+    .level-toggle {
+        flex-direction: column;
+    }
+
+    .direction-btn {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .level-btn {
+        width: 100%;
+        border-radius: 10px;
     }
 }

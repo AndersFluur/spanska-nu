@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordklasser och glosor - Spanska Nu</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← Tillbaka till startsidan</a>
+
+        <h1>🇪🇸 Ordklasser och glosor 🇸🇪</h1>
+        <p class="subtitle">Öva vanliga glosor med fokus på olika ordklasser som behövs för att göra dig förstådd</p>
+
+        <div class="info-panel">
+            <h2>Så använder du sidan</h2>
+            <ul class="info-list">
+                <li><strong>Steg 1</strong> är en kärnlista med de vanligaste orden du behöver först</li>
+                <li><strong>Steg 2</strong> fyller på med fler vardagsord och svarsmallar</li>
+                <li><strong>Steg 3</strong> breddar ordförrådet utan att byta struktur</li>
+                <li>Repetera samma steg flera gånger tills orden känns självklara</li>
+                <li>Byt sedan riktning och kör samma material från andra hållet</li>
+            </ul>
+        </div>
+
+        <div class="progress">
+            <div>Framsteg: <span id="correct-count">0</span> av <span id="total-count">0</span> korrekta</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="direction-panel">
+            <div class="direction-panel-header">
+                <h2>Riktning</h2>
+                <p>Välj om du vill öva från svenska till spanska, från spanska till svenska eller blandat.</p>
+            </div>
+            <div id="direction-toggle" class="direction-toggle"></div>
+        </div>
+
+        <div class="level-panel">
+            <div class="level-panel-header">
+                <h2>Nivå</h2>
+                <p>Bygg upp en basal kunskap i tre steg. Varje nivå innehåller alla tidigare ord plus nya.</p>
+            </div>
+            <div id="level-toggle" class="level-toggle"></div>
+            <p id="level-summary" class="level-summary"></p>
+        </div>
+
+        <div class="controls">
+            <button class="reset-btn" onclick="resetAll()">🔄 Rensa allt</button>
+            <button class="check-all-btn" onclick="checkAll()">✓ Kontrollera alla</button>
+            <button class="check-all-btn" onclick="fillAll()" style="background: #3498db;">📝 Fyll i alla</button>
+        </div>
+
+        <div id="word-classes-container"></div>
+    </div>
+
+    <script src="assets/js/verbs.js"></script>
+    <script src="assets/js/word-classes.js"></script>
+</body>
+</html>
