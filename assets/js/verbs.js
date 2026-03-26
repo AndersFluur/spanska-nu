@@ -3,15 +3,17 @@ let isMovingFocus = false;
 let audioAvailable = true;
 let audioWarningShown = false;
 let audioEnabled = false;
+let speechVoicesLoaded = false;
 
 // Initialize audio on first user interaction
 function initAudio() {
     if (!audioEnabled) {
         audioEnabled = true;
         console.log('✓ Audio enabled by user interaction');
-        // Try playing a silent audio to unlock audio playback
-        const silentAudio = new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAADhACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//////////////////////////////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQKAAAAAAAAA4a+T6WpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/7UEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAAC//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==');
-        silentAudio.play().catch(() => console.log('Silent audio failed, but that is OK'));
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+        }
     }
 }
 
@@ -33,85 +35,105 @@ function showAudioWarning() {
     }
 }
 
-function speakText(text) {
-    // Enable audio on first call
-    initAudio();
-
-    return new Promise(async (resolve, reject) => {
-        // Try Google TTS first (works better and more reliable)
-        // Using gtx client which is more permissive
-        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=gtx&q=${encodeURIComponent(text)}`;
-
-        try {
-            // Fetch the audio data to bypass CORS/browser restrictions
-            const response = await fetch(audioUrl);
-            if (!response.ok) {
-                throw new Error('Failed to fetch audio');
-            }
-
-            const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            const audio = new Audio(blobUrl);
-
-            audio.onended = () => {
-                console.log('✓ Google TTS finished');
-                URL.revokeObjectURL(blobUrl); // Clean up
-                resolve();
-            };
-
-            audio.onerror = (error) => {
-                console.log('Google TTS playback failed:', error);
-                URL.revokeObjectURL(blobUrl);
-                trySpeechSynthesis(text, resolve);
-            };
-
-            await audio.play();
-        } catch (error) {
-            console.log('Google TTS error:', error.message);
-            trySpeechSynthesis(text, resolve);
-        }
-    });
+function markAudioUnavailable() {
+    audioAvailable = false;
+    showAudioWarning();
 }
 
-function trySpeechSynthesis(text, resolve) {
+function ensureVoicesLoaded() {
     if (!('speechSynthesis' in window)) {
-        console.error('Ingen ljuduppspelning tillgänglig');
-        audioAvailable = false;
-        showAudioWarning();
-        resolve();
         return;
     }
 
-    try {
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'es-ES';
-        utterance.rate = 0.85;
-        utterance.pitch = 1.0;
-        utterance.volume = 1.0;
-
-        utterance.onend = () => {
-            console.log('SpeechSynthesis finished');
-            resolve();
-        };
-
-        utterance.onerror = (event) => {
-            console.error('SpeechSynthesis error:', event.error);
-            if (event.error === 'synthesis-failed') {
-                audioAvailable = false;
-                showAudioWarning();
-            }
-            resolve();
-        };
-
-        window.speechSynthesis.speak(utterance);
-    } catch (error) {
-        console.error('speechSynthesis error:', error);
-        audioAvailable = false;
-        showAudioWarning();
-        resolve();
+    if (!speechVoicesLoaded) {
+        window.speechSynthesis.getVoices();
+        speechVoicesLoaded = true;
     }
+}
+
+function getSpanishVoice() {
+    if (!('speechSynthesis' in window)) {
+        return null;
+    }
+
+    ensureVoicesLoaded();
+    const voices = window.speechSynthesis.getVoices();
+
+    if (!voices || voices.length === 0) {
+        return null;
+    }
+
+    return voices.find(voice => voice.lang && voice.lang.toLowerCase().startsWith('es'))
+        || voices.find(voice => voice.lang && voice.lang.toLowerCase().includes('es'))
+        || null;
+}
+
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+        speechVoicesLoaded = true;
+        window.speechSynthesis.getVoices();
+    };
+}
+
+function speakText(text) {
+    initAudio();
+
+    return new Promise((resolve) => {
+        if (!('speechSynthesis' in window)) {
+            console.error('Ingen ljuduppspelning tillgänglig');
+            markAudioUnavailable();
+            resolve();
+            return;
+        }
+
+        try {
+            ensureVoicesLoaded();
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            const spanishVoice = getSpanishVoice();
+
+            utterance.lang = spanishVoice?.lang || 'es-ES';
+            utterance.voice = spanishVoice || null;
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            let settled = false;
+            const settle = () => {
+                if (!settled) {
+                    settled = true;
+                    resolve();
+                }
+            };
+
+            const fallbackTimeout = setTimeout(() => {
+                console.warn('SpeechSynthesis timeout');
+                settle();
+            }, 10000);
+
+            utterance.onend = () => {
+                clearTimeout(fallbackTimeout);
+                console.log('SpeechSynthesis finished');
+                settle();
+            };
+
+            utterance.onerror = (event) => {
+                clearTimeout(fallbackTimeout);
+                console.error('SpeechSynthesis error:', event.error);
+                if (event.error === 'synthesis-failed' || event.error === 'voice-unavailable') {
+                    markAudioUnavailable();
+                }
+                settle();
+            };
+
+            window.speechSynthesis.speak(utterance);
+        } catch (error) {
+            console.error('speechSynthesis error:', error);
+            markAudioUnavailable();
+            resolve();
+        }
+    });
 }
 
 function speakAndFill(inputId, correctAnswer, fullPhrase) {
@@ -347,13 +369,10 @@ function generateHTML(verbData) {
             const infInputId = 'inf-input-' + inputCounter++;
             totalInputs++;
 
-            const conjugationsJson = JSON.stringify(conjugations).replace(/'/g, "\\'").replace(/"/g, "&quot;");
-
             verbHeader.innerHTML = `
                 <span style="font-weight: bold; color: #2E75B6; font-size: 1.2em;">
                     ${verbInfinitive}
                     <button class="speaker-btn" onclick="speakAndFillInfinitive('${infInputId}', '${correctTranslation}', '${verbInfinitive.toLowerCase()}')" title="Lyssna och fyll i översättning">🔊</button>
-                    <button class="speaker-btn" onclick='speakAllConjugations(${conjugationsJson}, "${infInputId}")' title="Lyssna och fyll i alla former" style="font-size: 18px;">🔊🔊</button>
                 </span>
                 <span style="color: #888; margin: 0 10px;">→</span>
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1;">
